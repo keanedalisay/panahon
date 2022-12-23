@@ -81,7 +81,6 @@ body {
     align-items: center;
   }
 }
-
 .mainWeather-textHolder {
   display: flex;
   flex-flow: column wrap;
@@ -102,7 +101,6 @@ body {
   width: 9rem;
   height: 9rem;
 }
-
 .extraTemp-maxMin {
   margin-bottom: 0.5rem;
   font-size: 1.4rem;
@@ -164,4 +162,87 @@ body {
   min-width: 10rem;
   font-size: 1.6rem;
   overflow: auto;
+}
+
+.extraWeatherPanel {
+  margin-top: 3rem;
+  padding: 1rem 0;
+  height: 18rem;
+  background: #21212122;
+  border-radius: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+
+  .rainVolume,
+  .humidity,
+  .wind {
+    position: relative;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+    font-family: "Rubik", Arial, Helvetica, sans-serif;
+    color: var(--white);
+  }
+  .humidity::before {
+    content: "";
+    position: absolute;
+    left: 0.5rem;
+    width: 0.1rem;
+    height: 80%;
+    background: var(--alto);
+  }
+  .humidity::after {
+    content: "";
+    position: absolute;
+    right: 0.5rem;
+    width: 0.1rem;
+    height: 80%;
+    background: var(--alto);
+  }
+}
+.rainVolume-icon {
+  width: 4rem;
+  height: 4rem;
+}
+.humidity-icon {
+  margin-bottom: 1.2rem;
+}
+.wind-icon {
+  margin-bottom: 1.5rem;
+  width: 4rem;
+  height: 4rem;
+}
+.rainVolume-data {
+  margin-top: 3rem;
+  font-size: 1.4rem;
+}
+.humidity-data {
+  margin-top: 2rem;
+  font-size: 2rem;
+}
+.wind-speed,
+.wind-direction {
+  margin: 0.5rem 0;
+  font-size: 1.4rem;
+}
+.wind-direction {
+  color: var(--cornflower-lilac);
+}
+.rainVolume-detail,
+.humidity-detail {
+  color: var(--alto);
+  text-align: center;
+}
+.rainVolume-detail {
+  margin-top: 3rem;
+  width: 7rem;
+}
+.humidity-detail {
+  margin-top: 3rem;
+}
+.wind-detail {
+  margin-top: 1rem;
+  color: var(--alto);
+  text-align: center;
 }
