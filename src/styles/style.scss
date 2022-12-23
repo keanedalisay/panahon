@@ -11,6 +11,7 @@ html {
   font-size: 10px;
 }
 body {
+  padding: 0 1rem;
   width: 100%;
   min-height: 100vh;
   background: linear-gradient(45deg, var(--eastern-blue), #afe2ff);
@@ -22,7 +23,7 @@ body {
 }
 
 .widgetPanel {
-  padding: 2rem 1rem;
+  padding: 2rem 0;
   width: 100%;
   display: flex;
   flex-flow: row nowrap;
@@ -113,7 +114,7 @@ body {
 
 .forecastPanel {
   margin-top: 5rem;
-  padding: 1rem 1rem;
+  padding: 1rem 0;
   width: 100%;
   display: flex;
   flex-flow: column wrap;
