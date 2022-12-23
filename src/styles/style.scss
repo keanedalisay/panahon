@@ -110,3 +110,57 @@ body {
   margin-top: 0.5rem;
   font-size: 1.4rem;
 }
+
+.forecastPanel {
+  margin-top: 5rem;
+  padding: 1rem 1rem;
+  width: 100%;
+  display: flex;
+  flex-flow: column wrap;
+  background: #21212122;
+  border-radius: 1rem;
+
+  .weatherElem {
+    min-height: 4.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    justify-items: center;
+    align-content: center;
+
+    .dummyWeatherDay {
+      min-width: 10rem;
+    }
+    .dummyWeatherIcon {
+      width: 3rem;
+    }
+  }
+
+  .forecastData {
+    min-height: 4.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    justify-items: center;
+    align-content: center;
+    font-family: "Rubik", Arial, Helvetica, sans-serif;
+    color: var(--white);
+  }
+}
+.weatherElem-precipitation,
+.weatherElem-maxMinTemp {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+.forecastData-day,
+.forecastData-precipitation,
+.forecastData-maxMinTemp {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+}
+.forecastData-day {
+  min-width: 10rem;
+  font-size: 1.6rem;
+  overflow: auto;
+}
