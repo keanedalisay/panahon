@@ -1,3 +1,31 @@
+@mixin widthAndHeight($w, $h) {
+  width: $w;
+  height: $h;
+}
+
+@mixin flexCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+@mixin flexCenterColumn {
+  @include flexCenter;
+  flex-flow: column wrap;
+}
+@mixin gridFourEvenColumns {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  justify-items: center;
+  align-content: center;
+}
+
+@mixin uprightFloatingBorder {
+  content: "";
+  position: absolute;
+  @include widthAndHeight(0.1rem, 80%);
+  background: var(--alto);
+}
+
 *,
 ::before,
 ::after {
@@ -32,24 +60,19 @@ body {
 }
 .widgetPanel-searchInput {
   padding: 0.5rem 1rem;
-  width: clamp(18rem, 10vw, 30rem);
-  height: 4rem;
+  @include widthAndHeight(clamp(18rem, 10vw, 30rem), 4rem);
   border-radius: 1rem;
   font-size: 1.4rem;
   font-family: "Rubik", Arial, Helvetica, sans-serif;
   color: var(--mine-shaft);
 }
 .widgetPanel-settingsBtn {
-  width: 5rem;
-  height: 5rem;
+  @include widthAndHeight(5rem, 5rem);
   background: transparent;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include flexCenter;
 
   .settingsIcon {
-    width: 4.5rem;
-    height: 4.5rem;
+    @include widthAndHeight(4.5rem, 4.5rem);
   }
 }
 .widgetPanel-settingsBtn:hover,
@@ -75,17 +98,11 @@ body {
   .extraTemp {
     margin-top: 1.5rem;
     width: min(50%, 20rem);
-    display: flex;
-    flex-flow: column wrap;
-    justify-content: center;
-    align-items: center;
+    @include flexCenterColumn;
   }
 }
 .mainWeather-textHolder {
-  display: flex;
-  flex-flow: column wrap;
-  justify-content: center;
-  align-items: center;
+  @include flexCenterColumn;
 
   .tempNow {
     margin-bottom: 0.5rem;
@@ -98,8 +115,7 @@ body {
   }
 }
 .mainWeather-icon {
-  width: 9rem;
-  height: 9rem;
+  @include widthAndHeight(9rem, 9rem);
 }
 .extraTemp-maxMin {
   margin-bottom: 0.5rem;
@@ -121,10 +137,7 @@ body {
 
   .weatherElem {
     min-height: 4.5rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    justify-items: center;
-    align-content: center;
+    @include gridFourEvenColumns;
 
     .dummyWeatherDay {
       min-width: 10rem;
@@ -136,26 +149,20 @@ body {
 
   .forecastData {
     min-height: 4.5rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    justify-items: center;
-    align-content: center;
+    @include gridFourEvenColumns;
     font-family: "Rubik", Arial, Helvetica, sans-serif;
     color: var(--white);
   }
 }
 .weatherElem-precipitation,
 .weatherElem-maxMinTemp {
-  width: 2.5rem;
-  height: 2.5rem;
+  @include widthAndHeight(2.5rem, 2.5rem);
 }
 .forecastData-day,
 .forecastData-precipitation,
 .forecastData-maxMinTemp {
   height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include flexCenter;
   font-size: 1.2rem;
 }
 .forecastData-day {
@@ -177,41 +184,28 @@ body {
   .humidity,
   .wind {
     position: relative;
-    display: flex;
-    flex-flow: column wrap;
-    justify-content: center;
-    align-items: center;
+    @include flexCenterColumn;
     font-family: "Rubik", Arial, Helvetica, sans-serif;
     color: var(--white);
   }
   .humidity::before {
-    content: "";
-    position: absolute;
+    @include uprightFloatingBorder;
     left: 0.5rem;
-    width: 0.1rem;
-    height: 80%;
-    background: var(--alto);
   }
   .humidity::after {
-    content: "";
-    position: absolute;
+    @include uprightFloatingBorder;
     right: 0.5rem;
-    width: 0.1rem;
-    height: 80%;
-    background: var(--alto);
   }
 }
 .rainVolume-icon {
-  width: 4rem;
-  height: 4rem;
+  @include widthAndHeight(4rem, 4rem);
 }
 .humidity-icon {
   margin-bottom: 1.2rem;
 }
 .wind-icon {
   margin-bottom: 1.5rem;
-  width: 4rem;
-  height: 4rem;
+  @include widthAndHeight(4rem, 4rem);
 }
 .rainVolume-data {
   margin-top: 3rem;
