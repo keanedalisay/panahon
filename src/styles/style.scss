@@ -56,3 +56,57 @@ body {
   background: var(--mine-shaft);
   opacity: 0.15;
 }
+
+.mainWeatherPanel {
+  margin: 1rem 0;
+  padding: 0 1rem;
+  display: flex;
+  flex-flow: column wrap;
+  font-family: "Rubik", Arial, Helvetica, sans-serif;
+  color: var(--white);
+
+  .mainWeather {
+    margin-bottom: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-items: center;
+  }
+  .extraTemp {
+    margin-top: 1.5rem;
+    width: min(50%, 20rem);
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.mainWeather-textHolder {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  align-items: center;
+
+  .tempNow {
+    margin-bottom: 0.5rem;
+    font-size: 4rem;
+    font-weight: 500;
+  }
+  .weatherLocation {
+    margin-top: 0.5rem;
+    font-size: 1.4rem;
+  }
+}
+.mainWeather-icon {
+  width: 9rem;
+  height: 9rem;
+}
+
+.extraTemp-maxMin {
+  margin-bottom: 0.5rem;
+  font-size: 1.4rem;
+}
+.extraTemp-feelsLike {
+  margin-top: 0.5rem;
+  font-size: 1.4rem;
+}
