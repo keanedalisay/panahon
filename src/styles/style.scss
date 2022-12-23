@@ -20,3 +20,39 @@ body {
   margin: 0 auto;
   width: min(100%, 80rem);
 }
+
+.widgetPanel {
+  padding: 2rem 1rem;
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.widgetPanel-searchInput {
+  padding: 0.5rem 1rem;
+  width: clamp(18rem, 10vw, 30rem);
+  height: 4rem;
+  border-radius: 1rem;
+  font-size: 1.4rem;
+  font-family: "Rubik", Arial, Helvetica, sans-serif;
+  color: var(--mine-shaft);
+}
+.widgetPanel-settingsBtn {
+  width: 5rem;
+  height: 5rem;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .settingsIcon {
+    width: 4.5rem;
+    height: 4.5rem;
+  }
+}
+.widgetPanel-settingsBtn:hover,
+.widgetPanel-settingsBtn:focus {
+  background: var(--mine-shaft);
+  opacity: 0.15;
+}
