@@ -22,7 +22,7 @@ module.exports = {
         use: ["style-loader", "css-loader", "sass-loader"],
       },
       {
-        test: /\.(woff|woff2|ttf|eof|otf)$/i,
+        test: /\.(woff|woff2|ttf|eot|otf)$/i,
         type: "asset/resource",
         generator: { filename: "assets/fonts/[name][ext]" },
       },
