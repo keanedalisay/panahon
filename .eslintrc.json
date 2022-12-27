@@ -10,6 +10,6 @@
     "sourceType": "module"
   },
   "rules": {
-    "quotes": ["error", "double", "backtick"]
+    "quotes": ["error", "double"]
   }
 }
