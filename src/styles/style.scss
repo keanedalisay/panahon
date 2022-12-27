@@ -290,3 +290,25 @@ body {
   width: 90%;
   height: 90%;
 }
+
+.footer {
+  margin-top: 2rem;
+  padding: 2rem 0;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "Rubik", Arial, Helvetica, sans-serif;
+  color: var(--white);
+
+  .openWeatherLink {
+    margin-left: 1rem;
+  }
+  .openWeatherLink-img {
+    width: 7rem;
+  }
+  .weatherLastUpdated {
+    margin-right: 1rem;
+    font-size: 1rem;
+  }
+}
