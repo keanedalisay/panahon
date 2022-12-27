@@ -240,3 +240,36 @@ body {
   color: var(--alto);
   text-align: center;
 }
+
+.suntimePanel {
+  margin-top: 3rem;
+  padding: 1rem 0;
+  background: #21212122;
+  border-radius: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-items: center;
+  align-content: center;
+
+  .sunrise,
+  .sunset {
+    @include flexCenterColumn;
+    font-family: "Rubik", Arial, Helvetica, sans-serif;
+    color: var(--white);
+  }
+}
+.sunrise-icon,
+.sunset-icon {
+  @include widthAndHeight(7rem, 7rem);
+}
+.sunrise-time,
+.sunset-time {
+  margin: 1.5rem 0;
+  font-size: 2rem;
+  font-weight: 500;
+}
+.sunrise-detail,
+.sunset-detail {
+  font-size: 1rem;
+  color: var(--alto);
+}
