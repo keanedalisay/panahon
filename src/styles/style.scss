@@ -132,7 +132,7 @@ body {
   width: 100%;
   display: flex;
   flex-flow: column wrap;
-  background: #21212122;
+  background: var(--mine-shaft-opacity-22);
   border-radius: 1rem;
 
   .weatherElem {
@@ -175,7 +175,7 @@ body {
   margin-top: 3rem;
   padding: 1rem 0;
   height: 18rem;
-  background: #21212122;
+  background: var(--mine-shaft-opacity-22);
   border-radius: 1rem;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -244,7 +244,7 @@ body {
 .suntimePanel {
   margin-top: 3rem;
   padding: 1rem 0;
-  background: #21212122;
+  background: var(--mine-shaft-opacity-22);
   border-radius: 1rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -278,7 +278,7 @@ body {
   margin-top: 3rem;
   padding: 1rem 0;
   @include widthAndHeight(100%, auto);
-  background: #21212122;
+  background: var(--mine-shaft-opacity-22);
   border-radius: 1rem;
   @include flexCenter;
 
