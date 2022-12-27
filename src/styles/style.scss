@@ -77,8 +77,8 @@ body {
 }
 .widgetPanel-settingsBtn:hover,
 .widgetPanel-settingsBtn:focus {
-  background: var(--mine-shaft);
-  opacity: 0.15;
+  background: var(--mine-shaft-opacity-22);
+  border-radius: 1rem;
 }
 
 .mainWeatherPanel {
