@@ -273,3 +273,20 @@ body {
   font-size: 1rem;
   color: var(--alto);
 }
+
+.weatherRadarPanel {
+  margin-top: 3rem;
+  padding: 1rem 0;
+  @include widthAndHeight(100%, auto);
+  background: #21212122;
+  border-radius: 1rem;
+  @include flexCenter;
+
+  .weatherRadar {
+    @include flexCenter;
+  }
+}
+.weatherRadar-img {
+  width: 90%;
+  height: 90%;
+}
