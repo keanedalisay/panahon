@@ -48,6 +48,7 @@ body {
 .wrapper {
   margin: 0 auto;
   width: min(100%, 80rem);
+  @include flexCenterColumn;
 }
 
 .widgetPanel {
@@ -60,7 +61,7 @@ body {
 }
 .widgetPanel-searchInput {
   padding: 0.5rem 1rem;
-  @include widthAndHeight(clamp(18rem, 10vw, 30rem), 4rem);
+  @include widthAndHeight(clamp(15rem, 50vw, 30rem), 4rem);
   border-radius: 1rem;
   font-size: 1.4rem;
   font-family: "Rubik", Arial, Helvetica, sans-serif;
@@ -84,6 +85,7 @@ body {
 .mainWeatherPanel {
   margin: 1rem 0;
   padding: 0 1rem;
+  width: 100%;
   display: flex;
   flex-flow: column wrap;
   font-family: "Rubik", Arial, Helvetica, sans-serif;
@@ -97,7 +99,7 @@ body {
   }
   .extraTemp {
     margin-top: 1.5rem;
-    width: min(50%, 20rem);
+    width: min(50%, 40rem);
     @include flexCenterColumn;
   }
 }
@@ -106,30 +108,32 @@ body {
 
   .tempNow {
     margin-bottom: 0.5rem;
-    font-size: 4rem;
+    font-size: clamp(4rem, 8vw, 7rem);
     font-weight: 500;
   }
   .weatherLocation {
     margin-top: 0.5rem;
-    font-size: 1.4rem;
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
   }
 }
 .mainWeather-icon {
-  @include widthAndHeight(9rem, 9rem);
+  position: relative;
+  top: 30%;
+  @include widthAndHeight(clamp(9rem, 18vw, 18rem), clamp(9rem, 18vw, 18rem));
 }
 .extraTemp-maxMin {
   margin-bottom: 0.5rem;
-  font-size: 1.4rem;
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
 }
 .extraTemp-feelsLike {
   margin-top: 0.5rem;
-  font-size: 1.4rem;
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
 }
 
 .forecastPanel {
   margin-top: 5rem;
-  padding: 1rem 0;
-  width: 100%;
+  padding: 1rem;
+  width: min(100%, 55rem);
   display: flex;
   flex-flow: column wrap;
   background: var(--mine-shaft-opacity-22);
@@ -140,15 +144,15 @@ body {
     @include gridFourEvenColumns;
 
     .dummyWeatherDay {
-      min-width: 10rem;
+      min-width: 8rem;
     }
     .dummyWeatherIcon {
-      width: 3rem;
+      min-width: 2rem;
     }
   }
 
   .forecastData {
-    min-height: 4.5rem;
+    height: clamp(4.5rem, 10vw, 6rem);
     @include gridFourEvenColumns;
     font-family: "Rubik", Arial, Helvetica, sans-serif;
     color: var(--white);
@@ -156,25 +160,34 @@ body {
 }
 .weatherElem-precipitation,
 .weatherElem-maxMinTemp {
-  @include widthAndHeight(2.5rem, 2.5rem);
+  @include widthAndHeight(
+    clamp(1.5rem, 5vw, 2.5rem),
+    clamp(1.5rem, 5vw, 2.5rem)
+  );
+}
+.forecastData-weather {
+  @include widthAndHeight(clamp(2rem, 6vw, 4rem), clamp(2rem, 6vw, 4rem));
 }
 .forecastData-day,
 .forecastData-precipitation,
 .forecastData-maxMinTemp {
   height: 100%;
   @include flexCenter;
-  font-size: 1.2rem;
 }
 .forecastData-day {
-  min-width: 10rem;
-  font-size: 1.6rem;
+  min-width: 8rem;
+  font-size: clamp(1.4rem, 3vw, 2rem);
   overflow: auto;
+}
+.forecastData-precipitation,
+.forecastData-maxMinTemp {
+  font-size: clamp(1rem, 3vw, 1.6rem);
 }
 
 .extraWeatherPanel {
   margin-top: 3rem;
-  padding: 1rem 0;
-  height: 18rem;
+  padding: 1rem;
+  @include widthAndHeight(min(100%, 55rem), clamp(18rem, 40vw, 22rem));
   background: var(--mine-shaft-opacity-22);
   border-radius: 1rem;
   display: grid;
@@ -190,11 +203,11 @@ body {
   }
   .humidity::before {
     @include uprightFloatingBorder;
-    left: 0.5rem;
+    left: 0rem;
   }
   .humidity::after {
     @include uprightFloatingBorder;
-    right: 0.5rem;
+    right: 0rem;
   }
 }
 .rainVolume-icon {
@@ -209,16 +222,16 @@ body {
 }
 .rainVolume-data {
   margin-top: 3rem;
-  font-size: 1.4rem;
+  font-size: clamp(1.2rem, 4vw, 2rem);
 }
 .humidity-data {
   margin-top: 2rem;
-  font-size: 2rem;
+  font-size: clamp(1.6rem, 4vw, 2.5rem);
 }
 .wind-speed,
 .wind-direction {
   margin: 0.5rem 0;
-  font-size: 1.4rem;
+  font-size: clamp(1.2rem, 4vw, 2rem);
 }
 .wind-direction {
   color: var(--cornflower-lilac);
@@ -230,20 +243,24 @@ body {
 }
 .rainVolume-detail {
   margin-top: 3rem;
-  width: 7rem;
+  min-width: 6rem;
+  font-size: clamp(0.8rem, 2vw, 1.2rem);
 }
 .humidity-detail {
   margin-top: 3rem;
+  font-size: clamp(0.8rem, 2vw, 1.2rem);
 }
 .wind-detail {
   margin-top: 1rem;
   color: var(--alto);
   text-align: center;
+  font-size: clamp(0.8rem, 2vw, 1.2rem);
 }
 
 .suntimePanel {
   margin-top: 3rem;
-  padding: 1rem 0;
+  padding: 1rem;
+  @include widthAndHeight(min(100%, 55rem), clamp(16rem, 40vw, 22rem));
   background: var(--mine-shaft-opacity-22);
   border-radius: 1rem;
   display: grid;
@@ -260,24 +277,24 @@ body {
 }
 .sunrise-icon,
 .sunset-icon {
-  @include widthAndHeight(7rem, 7rem);
+  @include widthAndHeight(clamp(6rem, 15vw, 9rem), clamp(6rem, 15vw, 9rem));
 }
 .sunrise-time,
 .sunset-time {
   margin: 1.5rem 0;
-  font-size: 2rem;
+  font-size: clamp(1.6rem, 4vw, 2.5rem);
   font-weight: 500;
 }
 .sunrise-detail,
 .sunset-detail {
-  font-size: 1rem;
+  font-size: clamp(0.8rem, 3vw, 1.2rem);
   color: var(--alto);
 }
 
 .weatherRadarPanel {
   margin-top: 3rem;
   padding: 1rem 0;
-  @include widthAndHeight(100%, auto);
+  @include widthAndHeight(min(100%, 55rem), auto);
   background: var(--mine-shaft-opacity-22);
   border-radius: 1rem;
   @include flexCenter;
@@ -288,12 +305,14 @@ body {
 }
 .weatherRadar-img {
   width: 90%;
-  height: 90%;
+  height: 30rem;
+  object-fit: cover;
 }
 
 .footer {
   margin-top: 2rem;
   padding: 2rem 0;
+  width: 100%;
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
@@ -309,6 +328,6 @@ body {
   }
   .weatherLastUpdated {
     margin-right: 1rem;
-    font-size: 1rem;
+    font-size: clamp(1rem, 3vw, 1.2rem);
   }
 }
