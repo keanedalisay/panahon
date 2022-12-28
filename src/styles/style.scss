@@ -147,8 +147,9 @@ body::-webkit-scrollbar-thumb:hover {
   width: min(100%, 55rem);
   display: flex;
   flex-flow: column wrap;
-  background: var(--mine-shaft-opacity-22);
+  background: transparent;
   border-radius: 1rem;
+  transition: background ease-in-out 275ms;
 
   .weatherElem {
     min-height: 4.5rem;
@@ -204,10 +205,11 @@ body::-webkit-scrollbar-thumb:hover {
   margin-top: 3rem;
   padding: 1rem;
   @include widthAndHeight(min(100%, 55rem), clamp(18rem, 40vw, 22rem));
-  background: var(--mine-shaft-opacity-22);
+  background: transparent;
   border-radius: 1rem;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  transition: background ease-in-out 275ms;
 
   .rainVolume,
   .humidity,
@@ -277,12 +279,13 @@ body::-webkit-scrollbar-thumb:hover {
   margin-top: 3rem;
   padding: 1rem;
   @include widthAndHeight(min(100%, 55rem), clamp(16rem, 40vw, 22rem));
-  background: var(--mine-shaft-opacity-22);
+  background: transparent;
   border-radius: 1rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
   justify-items: center;
   align-content: center;
+  transition: background ease-in-out 275ms;
 
   .sunrise,
   .sunset {
@@ -311,9 +314,10 @@ body::-webkit-scrollbar-thumb:hover {
   margin-top: 3rem;
   padding: 1rem 0;
   @include widthAndHeight(min(100%, 55rem), auto);
-  background: var(--mine-shaft-opacity-22);
+  background: transparent;
   border-radius: 1rem;
   @include flexCenter;
+  transition: background ease-in-out 275ms;
 
   .weatherRadar {
     @include flexCenter;
