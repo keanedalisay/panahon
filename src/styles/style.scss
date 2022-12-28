@@ -56,6 +56,59 @@ body::-webkit-scrollbar-thumb:hover {
   background: var(--mine-shaft-opacity-22);
 }
 
+.overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: #212121ee;
+  z-index: 1;
+}
+.alertPanel {
+  margin: 0 auto;
+  width: min(100%, 80rem);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  row-gap: clamp(2rem, 5vw, 4rem);
+  background: transparent;
+  transform: translate(-50%, -50%);
+  font-family: "Rubik", Arial, Helvetica, sans-serif;
+  color: var(--white);
+  text-align: center;
+  z-index: 2;
+}
+.alertPanel-closeBtn {
+  @include widthAndHeight(5rem, 5rem);
+  @include flexCenter;
+  position: absolute;
+  top: max(-40vh, -18rem);
+  background: transparent;
+  border-radius: 5rem;
+
+  .closeIcon {
+    @include widthAndHeight(3rem, 3rem);
+  }
+}
+.alertPanel-closeBtn:hover,
+.alertPanel-closeBtn:focus {
+  border: 0.2rem solid var(--white);
+}
+
+.alertPanel-hdng {
+  width: min(80%, 60rem);
+  color: var(--sundown);
+  font-size: clamp(2.5rem, 7vw, 5rem);
+}
+.alertPanel-detail {
+  width: min(80%, 60rem);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+}
+
 .wrapper {
   margin: 0 auto;
   width: min(100%, 80rem);
@@ -350,4 +403,8 @@ body::-webkit-scrollbar-thumb:hover {
     margin-right: 1rem;
     font-size: clamp(1rem, 3vw, 1.2rem);
   }
+}
+
+.elem-hide {
+  display: none;
 }
