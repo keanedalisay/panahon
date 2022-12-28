@@ -46,14 +46,14 @@ body {
 }
 body::-webkit-scrollbar {
   width: 1rem;
-  background: var(--seashell);
+  background: var(--white);
 }
 body::-webkit-scrollbar-thumb {
-  background: var(--alto);
+  background: #212121aa;
   border-radius: 5rem;
 }
 body::-webkit-scrollbar-thumb:hover {
-  background: var(--mine-shaft-opacity-22);
+  background: #212121bb;
 }
 
 .overlay {
