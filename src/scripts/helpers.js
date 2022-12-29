@@ -10,3 +10,12 @@ export const clampRgbVal = (val, maxVal) => {
 
   return val;
 };
+
+export const elemIsNotHidden = (elem) => {
+  if (elem.classList.contains("elem-hide")) return false;
+  return true;
+};
+
+export const storeToLocal = (key, value) => localStorage.setItem(key, value);
+export const getLocalKey = (key) => localStorage.getItem(key);
+export const deleteLocalKey = (key) => localStorage.removeItem(key);
