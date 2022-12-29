@@ -56,6 +56,10 @@ body::-webkit-scrollbar-thumb:hover {
   background: #212121bb;
 }
 
+object {
+  pointer-events: none;
+}
+
 .overlay {
   position: fixed;
   top: 0;
