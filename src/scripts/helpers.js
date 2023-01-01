@@ -1,3 +1,6 @@
+import getHours from "date-fns/getHours";
+import parseISO from "date-fns/parseISO";
+
 import clearDayIcon from "../assets/svgs/clear-sky-day-icon.svg";
 import clearNightIcon from "../assets/svgs/clear-sky-night-icon.svg";
 
@@ -42,6 +45,37 @@ export const elemIsNotHidden = (elem) => {
 export const storeToLocal = (key, value) => localStorage.setItem(key, value);
 export const getLocalKey = (key) => localStorage.getItem(key);
 export const deleteLocalKey = (key) => localStorage.removeItem(key);
+
+export const parseWeekDayName = (weekDayNum) => {
+  let weekDay;
+  switch (weekDayNum) {
+    case 0:
+      weekDay = "Sunday";
+      break;
+    case 1:
+      weekDay = "Monday";
+      break;
+    case 2:
+      weekDay = "Tuesday";
+      break;
+    case 3:
+      weekDay = "Wednesday";
+      break;
+    case 4:
+      weekDay = "Thursday";
+      break;
+    case 5:
+      weekDay = "Friday";
+      break;
+    case 6:
+      weekDay = "Saturday";
+      break;
+    default:
+      weekDay = "Number is not in range of 0-6 weekdays...";
+  }
+
+  return weekDay;
+};
 
 export const parseDegDrctn = (deg) => {
   if (deg > 0 && deg < 49) return "NNE";
@@ -92,4 +126,31 @@ export const getWeatherIconPath = (string, hours) => {
   } else if (/rain/i.test(string)) iconPath = rainIcon;
 
   return iconPath;
+};
+
+export const createForecastData = (weekDay, frcst, data) => {
+  const frcstPrecipChance = Math.round(frcst.pop * 100);
+  const frcstTempMax = Math.round(frcst.main.temp_max);
+  const frcstTempMin = Math.round(frcst.main.temp_min);
+  const frcstWeatherDesc = frcst.weather[0].description;
+
+  const frcstHours = getHours(parseISO(data.dt_txt));
+  const frcstWeatherIconPath = getWeatherIconPath(frcstWeatherDesc, frcstHours);
+
+  const frcstData = `<div class="forecastData">
+  <div class="forecastData-day">
+      <span><strong>${weekDay}</strong></span>
+  </div>
+  <object class="forecastData-weather" aria-label="${frcstWeatherDesc}"
+      data="${frcstWeatherIconPath}" type="text/svg+xml" tabindex="-1">
+      Weather for ${weekDay} is ${frcstWeatherDesc}</object>
+  <div class="forecastData-precipitation">
+      <span>${frcstPrecipChance}%</span>
+  </div>
+  <div class="forecastData-maxMinTemp">
+      <span>${frcstTempMax}°C / ${frcstTempMin}°C</span>
+  </div>
+</div>`;
+
+  return frcstData;
 };

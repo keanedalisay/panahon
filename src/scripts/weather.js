@@ -5,14 +5,17 @@ import {
   getMinutes,
   getHours,
   differenceInHours,
+  getDay,
   parseISO,
 } from "date-fns";
 
 import {
   convToDbleDgt,
+  createForecastData,
   deleteLocalKey,
   getWeatherIconPath,
   parseDegDrctn,
+  parseWeekDayName,
 } from "./helpers";
 
 const Weather = (() => {
@@ -103,17 +106,23 @@ const Weather = (() => {
   };
 
   const forecastToday = (data) => {
+    const forecastDataWrpr = document.querySelector(
+      "[data-slctr=forecastDataWrapper]"
+    );
     let frcstToday;
 
     for (let i = 0; i < data.list.length; i += 1) {
       const forecast = data.list[i];
-      const timeNow = toDate(Date.now());
       const forecastTime = parseISO(forecast.dt_txt);
+
+      const timeNow = toDate(Date.now());
       if (
         isToday(forecastTime) &&
         differenceInHours(timeNow, forecastTime) < 3
       ) {
         frcstToday = forecast;
+        const forecastData = createForecastData("Today", forecast, data);
+        forecastDataWrpr.insertAdjacentHTML("beforeend", forecastData);
         break;
       }
     }
@@ -124,6 +133,28 @@ const Weather = (() => {
     setTodaysWeather(frcstToday, data.city);
   };
 
+  const forecastNextFourDays = (data) => {
+    const forecastDataWrpr = document.querySelector(
+      "[data-slctr=forecastDataWrapper]"
+    );
+
+    let weekDay;
+
+    for (let i = 0; i < data.list.length; i += 1) {
+      const forecast = data.list[i];
+      const timeNow = toDate(Date.now());
+      const forecastTime = parseISO(forecast.dt_txt);
+
+      const hourDifference = getHours(timeNow) - getHours(forecastTime);
+      weekDay = parseWeekDayName(getDay(forecastTime));
+
+      if (!isToday(forecastTime) && hourDifference < 3 && hourDifference > 0) {
+        const forecastData = createForecastData(weekDay, forecast, data);
+        forecastDataWrpr.insertAdjacentHTML("beforeend", forecastData);
+      }
+    }
+  };
+
   const getLatAndLong = async (pos) => {
     deleteLocalKey("geoLocErr");
 
@@ -131,7 +162,9 @@ const Weather = (() => {
     const longPos = pos.coords.longitude;
 
     const data = await retrieveData(latPos, longPos);
+
     forecastToday(data);
+    forecastNextFourDays(data);
   };
 
   const getPosition = (rejectCall) => {
