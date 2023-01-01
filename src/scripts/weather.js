@@ -20,6 +20,15 @@ import {
 const Weather = (() => {
   const Geo = navigator.geolocation ? navigator.geolocation : false;
 
+  const setLastUpdate = () => {
+    const lastUpdatedLabel = document.querySelector(
+      "[data-slctr=lastUpdatedLabel]"
+    );
+
+    const timeNow = format(toDate(Date.now()), "p");
+    lastUpdatedLabel.textContent = `Last updated ${timeNow.toLowerCase()}`;
+  };
+
   const setTempLabels = (frcst) => {
     const mainTempLabel = document.querySelector("[data-slctr=mainTempLabel]");
     const maxTempLabel = document.querySelector("[data-slctr=maxTempLabel]");
@@ -80,8 +89,8 @@ const Weather = (() => {
     const sunriseDate = toDate(secondsToMilliseconds(city.sunrise));
     const sunsetDate = toDate(secondsToMilliseconds(city.sunset));
 
-    const sunriseTime = `${format(sunriseDate, "p").replace("AM", "am")}`;
-    const sunsetTime = `${format(sunsetDate, "p").replace("PM", "pm")}`;
+    const sunriseTime = `${format(sunriseDate, "p").toLowerCase()}`;
+    const sunsetTime = `${format(sunsetDate, "p").toLowerCase()}`;
 
     sunriseTimeLabel.textContent = sunriseTime;
     sunsetTimeLabel.textContent = sunsetTime;
@@ -160,6 +169,7 @@ const Weather = (() => {
 
     forecastToday(data);
     forecastNextFourDays(data);
+    setLastUpdate();
   };
 
   const getPosition = (rejectCall) => {
