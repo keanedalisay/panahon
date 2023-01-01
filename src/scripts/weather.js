@@ -101,7 +101,7 @@ const Weather = (() => {
   };
 
   const retrieveData = async (latitude, longitude) => {
-    const targetData = await fetch(`No API for you!`);
+    const targetData = await fetch(``);
     return targetData.json();
   };
 
@@ -118,7 +118,7 @@ const Weather = (() => {
       const timeNow = toDate(Date.now());
       if (
         isToday(forecastTime) &&
-        differenceInHours(timeNow, forecastTime) < 3
+        differenceInHours(timeNow, forecastTime) <= 3
       ) {
         frcstToday = forecast;
         const forecastData = createForecastData("Today", forecast, data);
@@ -148,7 +148,7 @@ const Weather = (() => {
       const hourDifference = getHours(timeNow) - getHours(forecastTime);
       weekDay = parseWeekDayName(getDay(forecastTime));
 
-      if (!isToday(forecastTime) && hourDifference < 3 && hourDifference > 0) {
+      if (!isToday(forecastTime) && hourDifference <= 3 && hourDifference > 0) {
         const forecastData = createForecastData(weekDay, forecast, data);
         forecastDataWrpr.insertAdjacentHTML("beforeend", forecastData);
       }
