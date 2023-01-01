@@ -31,18 +31,18 @@
         <section class="mainWeatherPanel">
             <div class="mainWeather">
                 <div class="mainWeather-temp">
-                    <span class="tempNow">32°C</span>
-                    <span class="weatherLocation">Manila, Philippines</span>
+                    <span class="tempNow" data-slctr="mainTempLabel">32°C</span>
+                    <span class="weatherLocation" data-slctr="weatherLocLabel">Manila, Philippines</span>
                 </div>
                 <object class="mainWeather-icon" aria-label="sunnyWeather" data="assets/svgs/clear-sky-day-icon.svg"
-                    type="text/svg+xml" tabindex="-1">Weather for today
+                    type="text/svg+xml" tabindex="-1" data-slctr="mainWeather">Weather for today
                     is: </object>
             </div>
             <div class="extraTemp" data-slctr="extraTempPanel">
                 <span class="extraTemp-maxMin">
-                    <strong>34°C</strong> / <strong>29°C</strong>
+                    <strong data-slctr="maxTempLabel">34°C</strong> / <strong data-slctr="minTempLabel">29°C</strong>
                 </span>
-                <span class="extraTemp-feelsLike">Feels like <strong>30°C</strong></span>
+                <span class="extraTemp-feelsLike">Feels like <strong data-slctr="feelsTempLabel">30°C</strong></span>
             </div>
         </section>
         <section class="forecastPanel" data-slctr="forecastPanel">
@@ -57,74 +57,81 @@
                     data="assets/svgs/temperature-icon.svg" type="text/svg+xml" tabindex="-1">Max and Min
                     Temperature</object>
             </div>
-            <div class="forecastData">
-                <div class="forecastData-day">
-                    <span><strong>Today</strong></span>
+            <div class="forecastDataWrapper" data-slctr="forecastDataWrapper">
+                <div class="forecastData">
+                    <div class="forecastData-day">
+                        <span><strong>Today</strong></span>
+                    </div>
+                    <object class="forecastData-weather" aria-label="Should indicate weather"
+                        data="assets/svgs/clear-sky-day-icon.svg" type="text/svg+xml" tabindex="-1">Placeholder text,
+                        should
+                        indicate weather</object>
+                    <div class="forecastData-precipitation">
+                        <span>34%</span>
+                    </div>
+                    <div class="forecastData-maxMinTemp">
+                        <span>34°C / 29°C</span>
+                    </div>
                 </div>
-                <object class="forecastData-weather" aria-label="Should indicate weather"
-                    data="assets/svgs/clear-sky-day-icon.svg" type="text/svg+xml" tabindex="-1">Placeholder text, should
-                    indicate weather</object>
-                <div class="forecastData-precipitation">
-                    <span>34%</span>
+                <div class="forecastData">
+                    <div class="forecastData-day">
+                        <span><strong>Wednesday</strong></span>
+                    </div>
+                    <object class="forecastData-weather" aria-label="Should indicate weather"
+                        data="assets/svgs/clear-sky-day-icon.svg" type="text/svg+xml" tabindex="-1">Placeholder text,
+                        should
+                        indicate weather</object>
+                    <div class="forecastData-precipitation">
+                        <span>34%</span>
+                    </div>
+                    <div class="forecastData-maxMinTemp">
+                        <span>34°C / 29°C</span>
+                    </div>
                 </div>
-                <div class="forecastData-maxMinTemp">
-                    <span>34°C / 29°C</span>
+                <div class="forecastData">
+                    <div class="forecastData-day">
+                        <span><strong>Thursday</strong></span>
+                    </div>
+                    <object class="forecastData-weather" aria-label="Should indicate weather"
+                        data="assets/svgs/clear-sky-day-icon.svg" type="text/svg+xml" tabindex="-1">Placeholder text,
+                        should
+                        indicate weather</object>
+                    <div class="forecastData-precipitation">
+                        <span>34%</span>
+                    </div>
+                    <div class="forecastData-maxMinTemp">
+                        <span>34°C / 29°C</span>
+                    </div>
                 </div>
-            </div>
-            <div class="forecastData">
-                <div class="forecastData-day">
-                    <span><strong>Wednesday</strong></span>
+                <div class="forecastData">
+                    <div class="forecastData-day">
+                        <span><strong>Friday</strong></span>
+                    </div>
+                    <object class="forecastData-weather" aria-label="Should indicate weather"
+                        data="assets/svgs/clear-sky-day-icon.svg" type="text/svg+xml" tabindex="-1">Placeholder text,
+                        should
+                        indicate weather</object>
+                    <div class="forecastData-precipitation">
+                        <span>34%</span>
+                    </div>
+                    <div class="forecastData-maxMinTemp">
+                        <span>34°C / 29°C</span>
+                    </div>
                 </div>
-                <object class="forecastData-weather" aria-label="Should indicate weather"
-                    data="assets/svgs/clear-sky-day-icon.svg" type="text/svg+xml" tabindex="-1">Placeholder text, should
-                    indicate weather</object>
-                <div class="forecastData-precipitation">
-                    <span>34%</span>
-                </div>
-                <div class="forecastData-maxMinTemp">
-                    <span>34°C / 29°C</span>
-                </div>
-            </div>
-            <div class="forecastData">
-                <div class="forecastData-day">
-                    <span><strong>Thursday</strong></span>
-                </div>
-                <object class="forecastData-weather" aria-label="Should indicate weather"
-                    data="assets/svgs/clear-sky-day-icon.svg" type="text/svg+xml" tabindex="-1">Placeholder text, should
-                    indicate weather</object>
-                <div class="forecastData-precipitation">
-                    <span>34%</span>
-                </div>
-                <div class="forecastData-maxMinTemp">
-                    <span>34°C / 29°C</span>
-                </div>
-            </div>
-            <div class="forecastData">
-                <div class="forecastData-day">
-                    <span><strong>Friday</strong></span>
-                </div>
-                <object class="forecastData-weather" aria-label="Should indicate weather"
-                    data="assets/svgs/clear-sky-day-icon.svg" type="text/svg+xml" tabindex="-1">Placeholder text, should
-                    indicate weather</object>
-                <div class="forecastData-precipitation">
-                    <span>34%</span>
-                </div>
-                <div class="forecastData-maxMinTemp">
-                    <span>34°C / 29°C</span>
-                </div>
-            </div>
-            <div class="forecastData">
-                <div class="forecastData-day">
-                    <span><strong>Saturday</strong></span>
-                </div>
-                <object class="forecastData-weather" aria-label="Should indicate weather"
-                    data="assets/svgs/clear-sky-day-icon.svg" type="text/svg+xml" tabindex="-1">Placeholder text, should
-                    indicate weather</object>
-                <div class="forecastData-precipitation">
-                    <span>34%</span>
-                </div>
-                <div class="forecastData-maxMinTemp">
-                    <span>34°C / 29°C</span>
+                <div class="forecastData">
+                    <div class="forecastData-day">
+                        <span><strong>Saturday</strong></span>
+                    </div>
+                    <object class="forecastData-weather" aria-label="Should indicate weather"
+                        data="assets/svgs/clear-sky-day-icon.svg" type="text/svg+xml" tabindex="-1">Placeholder text,
+                        should
+                        indicate weather</object>
+                    <div class="forecastData-precipitation">
+                        <span>34%</span>
+                    </div>
+                    <div class="forecastData-maxMinTemp">
+                        <span>34°C / 29°C</span>
+                    </div>
                 </div>
             </div>
         </section>
@@ -133,7 +140,7 @@
                 <object class="rainVolume-icon" aria-label="Rain Volume icon" data="assets/svgs/rain-drop-icon.svg"
                     type="text/svg+xml" tabindex="-1">Rain Volume</object>
                 <div class="rainVolume-data">
-                    <span><strong>0.26 mm</strong></span>
+                    <span><strong data-slctr="rainVolLabel">0.26 mm</strong></span>
                 </div>
                 <div class="rainVolume-detail">
                     <span>Rain volume last 3 hours</span>
@@ -143,7 +150,7 @@
                 <object class="humidity-icon" aria-label="Humidity icon" data="assets/svgs/humidity-icon.svg"
                     type="text/svg+xml" tabindex="-1">Humidity</object>
                 <div class="humidity-data">
-                    <span><strong>81%</strong></span>
+                    <span><strong data-slctr="humidityLabel">81%</strong></span>
                 </div>
                 <div class="humidity-detail">
                     <span>Humidity</span>
@@ -153,10 +160,10 @@
                 <object class="wind-icon" aria-label="Wind icon" data="assets/svgs/wind-blow-icon.svg"
                     type="text/svg+xml" tabindex="-1">Wind</object>
                 <div class="wind-speed">
-                    <span><strong>1.27 m/s</strong></span>
+                    <span><strong data-slctr="windSpeedLabel">1.27 m/s</strong></span>
                 </div>
                 <div class="wind-direction">
-                    <span><strong>NW</strong></span>
+                    <span><strong data-slctr="windDirLabel">NW</strong></span>
                 </div>
                 <div class="wind-detail">
                     <span>Wind</span>
@@ -169,7 +176,7 @@
                     data="assets/svgs/sunrise-icon.svg" type="text/svg+xml" tabindex="-1">A sun icon rising with bright
                     yellow glares.</object>
                 <div class="sunrise-time">
-                    <span><strong>5:30 am</strong></span>
+                    <span><strong data-slctr="sunriseTimeLabel">5:30 am</strong></span>
                 </div>
                 <div class="sunrise-detail">
                     <span>Sunrise</span>
@@ -180,7 +187,7 @@
                     data="assets/svgs/sunset-icon.svg" type="text/svg+xml" tabindex="-1">A sun icon setting, leaving a
                     mix of red and orange glare.</object>
                 <div class="sunset-time">
-                    <span><strong>5:41 pm</strong></span>
+                    <span><strong data-slctr="sunsetTimeLabel">5:41 pm</strong></span>
                 </div>
                 <div class="sunset-detail">
                     <span>Sunset</span>
