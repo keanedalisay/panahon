@@ -118,7 +118,7 @@ const Weather = (() => {
       const timeNow = toDate(Date.now());
       if (
         isToday(forecastTime) &&
-        differenceInHours(timeNow, forecastTime) <= 3
+        differenceInHours(timeNow, forecastTime) < 3
       ) {
         frcstToday = forecast;
         const forecastData = createForecastData("Today", forecast, data);
