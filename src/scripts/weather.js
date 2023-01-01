@@ -2,15 +2,14 @@ import {
   isToday,
   toDate,
   secondsToMilliseconds,
-  getMinutes,
   getHours,
   differenceInHours,
   getDay,
+  format,
   parseISO,
 } from "date-fns";
 
 import {
-  convToDbleDgt,
   createForecastData,
   deleteLocalKey,
   getWeatherIconPath,
@@ -81,12 +80,8 @@ const Weather = (() => {
     const sunriseDate = toDate(secondsToMilliseconds(city.sunrise));
     const sunsetDate = toDate(secondsToMilliseconds(city.sunset));
 
-    const sunriseTime = `${convToDbleDgt(
-      getHours(sunriseDate)
-    )} : ${convToDbleDgt(getMinutes(sunriseDate))}`;
-    const sunsetTime = `${convToDbleDgt(
-      getHours(sunsetDate)
-    )} : ${convToDbleDgt(getMinutes(sunsetDate))}`;
+    const sunriseTime = `${format(sunriseDate, "p").replace("AM", "am")}`;
+    const sunsetTime = `${format(sunsetDate, "p").replace("PM", "pm")}`;
 
     sunriseTimeLabel.textContent = sunriseTime;
     sunsetTimeLabel.textContent = sunsetTime;

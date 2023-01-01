@@ -32,11 +32,6 @@ export const clampRgbVal = (val, maxVal) => {
   return val;
 };
 
-export const convToDbleDgt = (num) => {
-  if (num.toString().length < 2) return `0${num}`;
-  return num;
-};
-
 export const elemIsNotHidden = (elem) => {
   if (elem.classList.contains("elem-hide")) return false;
   return true;
