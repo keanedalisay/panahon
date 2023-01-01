@@ -31,18 +31,17 @@
         <section class="mainWeatherPanel">
             <div class="mainWeather">
                 <div class="mainWeather-temp">
-                    <span class="tempNow" data-slctr="mainTempLabel">32°C</span>
-                    <span class="weatherLocation" data-slctr="weatherLocLabel">Manila, Philippines</span>
+                    <span class="tempNow" data-slctr="mainTempLabel">0°C</span>
+                    <span class="weatherLocation" data-slctr="weatherLocLabel">No Location.</span>
                 </div>
                 <object class="mainWeather-icon" aria-label="sunnyWeather" data="assets/svgs/clear-sky-day-icon.svg"
-                    type="text/svg+xml" tabindex="-1" data-slctr="mainWeather">Weather for today
-                    is: </object>
+                    type="text/svg+xml" tabindex="-1" data-slctr="mainWeather">No weather data to retrieve.</object>
             </div>
             <div class="extraTemp" data-slctr="extraTempPanel">
                 <span class="extraTemp-maxMin">
-                    <strong data-slctr="maxTempLabel">34°C</strong> / <strong data-slctr="minTempLabel">29°C</strong>
+                    <strong data-slctr="maxTempLabel">0°C</strong> / <strong data-slctr="minTempLabel">0°C</strong>
                 </span>
-                <span class="extraTemp-feelsLike">Feels like <strong data-slctr="feelsTempLabel">30°C</strong></span>
+                <span class="extraTemp-feelsLike">Feels like <strong data-slctr="feelsTempLabel">nothing</strong></span>
             </div>
         </section>
         <section class="forecastPanel" data-slctr="forecastPanel">
@@ -51,11 +50,11 @@
                 <div class="dummyWeatherIcon"></div>
                 <object class="weatherElem-precipitation"
                     aria-label="Precipitation chance for the coming days, expressed in percentage."
-                    data="assets/svgs/rain-icon.svg" type="text/svg+xml" tabindex="-1">Precipitation Chance</object>
+                    data="assets/svgs/rain-icon.svg" type="text/svg+xml" tabindex="-1">Precipitation Chance.</object>
                 <object class="weatherElem-maxMinTemp"
                     aria-label="Max and Minimum temperature for the coming days, expressed in either Celsius or Fahrenheit"
                     data="assets/svgs/temperature-icon.svg" type="text/svg+xml" tabindex="-1">Max and Min
-                    Temperature</object>
+                    Temperature.</object>
             </div>
             <div class="forecastDataWrapper" data-slctr="forecastDataWrapper">
 
@@ -66,7 +65,7 @@
                 <object class="rainVolume-icon" aria-label="Rain Volume icon" data="assets/svgs/rain-drop-icon.svg"
                     type="text/svg+xml" tabindex="-1">Rain Volume</object>
                 <div class="rainVolume-data">
-                    <span><strong data-slctr="rainVolLabel">0.26 mm</strong></span>
+                    <span><strong data-slctr="rainVolLabel">0 mm</strong></span>
                 </div>
                 <div class="rainVolume-detail">
                     <span>Rain volume last 3 hours</span>
@@ -76,7 +75,7 @@
                 <object class="humidity-icon" aria-label="Humidity icon" data="assets/svgs/humidity-icon.svg"
                     type="text/svg+xml" tabindex="-1">Humidity</object>
                 <div class="humidity-data">
-                    <span><strong data-slctr="humidityLabel">81%</strong></span>
+                    <span><strong data-slctr="humidityLabel">0%</strong></span>
                 </div>
                 <div class="humidity-detail">
                     <span>Humidity</span>
@@ -86,10 +85,10 @@
                 <object class="wind-icon" aria-label="Wind icon" data="assets/svgs/wind-blow-icon.svg"
                     type="text/svg+xml" tabindex="-1">Wind</object>
                 <div class="wind-speed">
-                    <span><strong data-slctr="windSpeedLabel">1.27 m/s</strong></span>
+                    <span><strong data-slctr="windSpeedLabel">0 m/s</strong></span>
                 </div>
                 <div class="wind-direction">
-                    <span><strong data-slctr="windDirLabel">NW</strong></span>
+                    <span><strong data-slctr="windDirLabel">N/A</strong></span>
                 </div>
                 <div class="wind-detail">
                     <span>Wind</span>
@@ -102,7 +101,7 @@
                     data="assets/svgs/sunrise-icon.svg" type="text/svg+xml" tabindex="-1">A sun icon rising with bright
                     yellow glares.</object>
                 <div class="sunrise-time">
-                    <span><strong data-slctr="sunriseTimeLabel">5:30 am</strong></span>
+                    <span><strong data-slctr="sunriseTimeLabel">0:00</strong></span>
                 </div>
                 <div class="sunrise-detail">
                     <span>Sunrise</span>
@@ -113,7 +112,7 @@
                     data="assets/svgs/sunset-icon.svg" type="text/svg+xml" tabindex="-1">A sun icon setting, leaving a
                     mix of red and orange glare.</object>
                 <div class="sunset-time">
-                    <span><strong data-slctr="sunsetTimeLabel">5:41 pm</strong></span>
+                    <span><strong data-slctr="sunsetTimeLabel">0:00</strong></span>
                 </div>
                 <div class="sunset-detail">
                     <span>Sunset</span>
@@ -129,7 +128,7 @@
         <footer class="footer">
             <a class="openWeatherLink" href="https://openweathermap.org/" target="_blank"><img
                     class="openWeatherLink-img" alt="Open Weather API Logo" src="assets/imgs/open-weather.png"></a>
-            <span class="weatherLastUpdated">Last updated 2:08 pm</span>
+            <span class="weatherLastUpdated">Last updated 0:00</span>
         </footer>
     </div>
 </body>
