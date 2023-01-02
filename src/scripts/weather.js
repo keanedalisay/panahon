@@ -104,11 +104,6 @@ const Weather = (() => {
     setSuntime(city);
   };
 
-  const retrieveData = async (latitude, longitude) => {
-    const targetData = await fetch(``);
-    return targetData.json();
-  };
-
   const forecastToday = (data) => {
     const forecastDataWrpr = document.querySelector(
       "[data-slctr=forecastDataWrapper]"
@@ -159,17 +154,22 @@ const Weather = (() => {
     }
   };
 
+  const getWeather = async (latitude, longitude) => {
+    const targetData = await fetch(``);
+    const data = await targetData.json();
+
+    forecastToday(data);
+    forecastNextFourDays(data);
+    setLastUpdate();
+  };
+
   const getLatAndLong = async (pos) => {
     deleteLocalKey("geoLocErr");
 
     const latPos = pos.coords.latitude;
     const longPos = pos.coords.longitude;
 
-    const data = await retrieveData(latPos, longPos);
-
-    forecastToday(data);
-    forecastNextFourDays(data);
-    setLastUpdate();
+    getWeather(latPos, longPos);
   };
 
   const getPosition = (rejectCall) => {
@@ -178,7 +178,7 @@ const Weather = (() => {
 
   const obj = {
     getPosition,
-    retrieveData,
+    getWeather,
     Geo,
   };
 
