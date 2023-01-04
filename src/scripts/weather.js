@@ -11,7 +11,7 @@ import {
 } from "date-fns";
 
 import {
-  createForecastData,
+  CreateForecastData,
   deleteLocalKey,
   displayErrorAlert,
   getWeatherIconPath,
@@ -123,7 +123,7 @@ const Weather = (() => {
         differenceInHours(timeNow, forecastTime) < 3
       ) {
         frcstToday = forecast;
-        const forecastData = createForecastData("Today", forecast, data);
+        const forecastData = CreateForecastData("Today", forecast, data);
         forecastDataWrpr.insertAdjacentHTML("beforeend", forecastData);
         break;
       }
@@ -144,7 +144,7 @@ const Weather = (() => {
       weekDay = parseWeekDayName(getDay(forecastTime));
 
       if (!isToday(forecastTime) && hourDifference <= 3 && hourDifference > 0) {
-        const forecastData = createForecastData(weekDay, forecast, data);
+        const forecastData = CreateForecastData(weekDay, forecast, data);
         forecastDataWrpr.insertAdjacentHTML("beforeend", forecastData);
       }
     }
@@ -161,8 +161,6 @@ const Weather = (() => {
       errorFunc(err);
       return;
     }
-
-    console.log(data);
 
     forecastDataWrpr.innerHTML = "";
     forecastToday(data);

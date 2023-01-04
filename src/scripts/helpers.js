@@ -1,11 +1,8 @@
 /* eslint-disable linebreak-style */
-import getHours from "date-fns/getHours";
-import parseISO from "date-fns/parseISO";
+import { getHours, parseISO } from "date-fns";
 
 import countries from "i18n-iso-countries";
 import enLang from "i18n-iso-countries/langs/en.json";
-
-countries.registerLocale(enLang);
 
 import clearDayIcon from "../assets/svgs/clear-sky-day-icon.svg";
 import clearNightIcon from "../assets/svgs/clear-sky-night-icon.svg";
@@ -25,37 +22,102 @@ import snowIcon from "../assets/svgs/snow-icon.svg";
 import thunderstormIcon from "../assets/svgs/thunderstorm-icon.svg";
 import windCloudIcon from "../assets/svgs/wind-cloud-icon.svg";
 
+countries.registerLocale(enLang);
+
 export const delegateEvent = (parent, event, slctr, func) => {
   parent.addEventListener(event, (e) => {
     if (e.target.matches(slctr)) func(e);
   });
 };
 
-export const convToHex = (num) => {
-  if (num < 16) return "00";
-
-  return num.toString(16);
-};
-
-export const clampRgbVal = (val, maxVal) => {
-  if (val >= maxVal) return maxVal;
-  if (val <= 0) return 0;
-
-  return val;
-};
+export const storeToLocal = (key, value) => localStorage.setItem(key, value);
+export const getLocalKey = (key) => localStorage.getItem(key);
+export const deleteLocalKey = (key) => localStorage.removeItem(key);
 
 export const elemIsNotHidden = (elem) => {
   if (elem.classList.contains("elem-hide")) return false;
   return true;
 };
 
-export const storeToLocal = (key, value) => localStorage.setItem(key, value);
-export const getLocalKey = (key) => localStorage.getItem(key);
-export const deleteLocalKey = (key) => localStorage.removeItem(key);
+export const getWeatherIconPath = (string, hours) => {
+  let iconPath;
 
-export const getCountryName = (cntryCode) => {
-  return countries.getName(cntryCode, "en", { select: "alias" });
+  if (/clear sky/i.test(string)) {
+    iconPath = hours > 17 ? clearNightIcon : clearDayIcon;
+  } else if (
+    /mist/i.test(string) ||
+    /fog/i.test(string) ||
+    /smoke/i.test(string) ||
+    /haze/i.test(string) ||
+    /sand/i.test(string) ||
+    /dust/i.test(string) ||
+    /ash/i.test(string) ||
+    /squall/i.test(string) ||
+    /tornado/i.test(string)
+  ) {
+    iconPath = windCloudIcon;
+  } else if (/few clouds/i.test(string)) {
+    iconPath = hours > 17 ? fewCloudsNightIcon : fewCloudsDayIcon;
+  } else if (/scattered clouds/i.test(string)) iconPath = scatteredCloudsIcon;
+  else if (/broken clouds/i.test(string) || /overcast clouds/i.test(string)) {
+    iconPath = brokenCloudsIcon;
+  } else if (/thunderstorm/i.test(string)) iconPath = thunderstormIcon;
+  else if (/snow/i.test(string) || /sleet/.test(string)) iconPath = snowIcon;
+  else if (/shower rain/i.test(string) || /drizzle/.test(string)) {
+    iconPath = hours > 17 ? showerRainNightIcon : showerRainDayIcon;
+  } else if (/rain/i.test(string)) iconPath = rainIcon;
+
+  return iconPath;
 };
+
+export const CreateForecastData = (weekDay, frcst, data) => {
+  const frcstPrecipChance = Math.round(frcst.pop * 100);
+  const frcstTempMax = Math.round(frcst.main.temp_max);
+  const frcstTempMin = Math.round(frcst.main.temp_min);
+  const frcstWeatherDesc = frcst.weather[0].description;
+
+  const frcstHours = getHours(parseISO(data.dt_txt));
+  const frcstWeatherIconPath = getWeatherIconPath(frcstWeatherDesc, frcstHours);
+
+  const frcstData = `<div class="forecastData">
+  <div class="forecastData-day">
+      <span><strong>${weekDay}</strong></span>
+  </div>
+  <object class="forecastData-weather" aria-label="${frcstWeatherDesc}"
+      data="${frcstWeatherIconPath}" type="text/svg+xml" tabindex="-1">
+      Weather for ${weekDay} is ${frcstWeatherDesc}</object>
+  <div class="forecastData-precipitation">
+      <span>${frcstPrecipChance}%</span>
+  </div>
+  <div class="forecastData-maxMinTemp">
+      <span>${frcstTempMax}°C / ${frcstTempMin}°C</span>
+  </div>
+</div>`;
+
+  return frcstData;
+};
+
+export const alertHeading = document.querySelector("[data-slctr=alertHeading]");
+export const alertDetail = document.querySelector("[data-slctr=alertDetail]");
+
+export const toggleOverlay = () => {
+  const overlay = document.querySelector("[data-slctr=overlay]");
+  overlay.classList.toggle("elem-hide", elemIsNotHidden(overlay));
+};
+export const toggleAlertPanel = () => {
+  toggleOverlay();
+  const alertPanel = document.querySelector("[data-slctr=alertPanel]");
+  alertPanel.classList.toggle("elem-hide", elemIsNotHidden(alertPanel));
+};
+
+export const displayErrorAlert = (err) => {
+  toggleAlertPanel();
+  alertHeading.textContent = err.name;
+  alertDetail.textContent = err.stack;
+};
+
+export const getCountryName = (cntryCode) =>
+  countries.getName(cntryCode, "en", { select: "alias" });
 
 export const parseWeekDayName = (weekDayNum) => {
   let weekDay;
@@ -108,79 +170,15 @@ export const parseDegDrctn = (deg) => {
   return "N";
 };
 
-export const getWeatherIconPath = (string, hours) => {
-  let iconPath;
+export const convToHex = (num) => {
+  if (num < 16) return "00";
 
-  if (/clear sky/i.test(string)) {
-    iconPath = hours > 17 ? clearNightIcon : clearDayIcon;
-  } else if (
-    /mist/i.test(string) ||
-    /fog/i.test(string) ||
-    /smoke/i.test(string) ||
-    /haze/i.test(string) ||
-    /sand/i.test(string) ||
-    /dust/i.test(string) ||
-    /ash/i.test(string) ||
-    /squall/i.test(string) ||
-    /tornado/i.test(string)
-  ) {
-    iconPath = windCloudIcon;
-  } else if (/few clouds/i.test(string)) {
-    iconPath = hours > 17 ? fewCloudsNightIcon : fewCloudsDayIcon;
-  } else if (/scattered clouds/i.test(string)) iconPath = scatteredCloudsIcon;
-  else if (/broken clouds/i.test(string) || /overcast clouds/i.test(string)) {
-    iconPath = brokenCloudsIcon;
-  } else if (/thunderstorm/i.test(string)) iconPath = thunderstormIcon;
-  else if (/snow/i.test(string) || /sleet/.test(string)) iconPath = snowIcon;
-  else if (/shower rain/i.test(string) || /drizzle/.test(string)) {
-    iconPath = hours > 17 ? showerRainNightIcon : showerRainDayIcon;
-  } else if (/rain/i.test(string)) iconPath = rainIcon;
-
-  return iconPath;
+  return num.toString(16);
 };
 
-export const createForecastData = (weekDay, frcst, data) => {
-  const frcstPrecipChance = Math.round(frcst.pop * 100);
-  const frcstTempMax = Math.round(frcst.main.temp_max);
-  const frcstTempMin = Math.round(frcst.main.temp_min);
-  const frcstWeatherDesc = frcst.weather[0].description;
+export const clampRgbVal = (val, maxVal) => {
+  if (val >= maxVal) return maxVal;
+  if (val <= 0) return 0;
 
-  const frcstHours = getHours(parseISO(data.dt_txt));
-  const frcstWeatherIconPath = getWeatherIconPath(frcstWeatherDesc, frcstHours);
-
-  const frcstData = `<div class="forecastData">
-  <div class="forecastData-day">
-      <span><strong>${weekDay}</strong></span>
-  </div>
-  <object class="forecastData-weather" aria-label="${frcstWeatherDesc}"
-      data="${frcstWeatherIconPath}" type="text/svg+xml" tabindex="-1">
-      Weather for ${weekDay} is ${frcstWeatherDesc}</object>
-  <div class="forecastData-precipitation">
-      <span>${frcstPrecipChance}%</span>
-  </div>
-  <div class="forecastData-maxMinTemp">
-      <span>${frcstTempMax}°C / ${frcstTempMin}°C</span>
-  </div>
-</div>`;
-
-  return frcstData;
-};
-
-export const alertHeading = document.querySelector("[data-slctr=alertHeading]");
-export const alertDetail = document.querySelector("[data-slctr=alertDetail]");
-
-export const toggleOverlay = () => {
-  const overlay = document.querySelector("[data-slctr=overlay]");
-  overlay.classList.toggle("elem-hide", elemIsNotHidden(overlay));
-};
-export const toggleAlertPanel = () => {
-  toggleOverlay();
-  const alertPanel = document.querySelector("[data-slctr=alertPanel]");
-  alertPanel.classList.toggle("elem-hide", elemIsNotHidden(alertPanel));
-};
-
-export const displayErrorAlert = (err) => {
-  toggleAlertPanel();
-  alertHeading.textContent = err.name;
-  alertDetail.textContent = err.stack;
+  return val;
 };
