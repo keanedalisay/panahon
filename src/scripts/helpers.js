@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import getHours from "date-fns/getHours";
 import parseISO from "date-fns/parseISO";
 
@@ -163,4 +164,23 @@ export const createForecastData = (weekDay, frcst, data) => {
 </div>`;
 
   return frcstData;
+};
+
+export const alertHeading = document.querySelector("[data-slctr=alertHeading]");
+export const alertDetail = document.querySelector("[data-slctr=alertDetail]");
+
+export const toggleOverlay = () => {
+  const overlay = document.querySelector("[data-slctr=overlay]");
+  overlay.classList.toggle("elem-hide", elemIsNotHidden(overlay));
+};
+export const toggleAlertPanel = () => {
+  toggleOverlay();
+  const alertPanel = document.querySelector("[data-slctr=alertPanel]");
+  alertPanel.classList.toggle("elem-hide", elemIsNotHidden(alertPanel));
+};
+
+export const displayErrorAlert = (err) => {
+  toggleAlertPanel();
+  alertHeading.textContent = err.name;
+  alertDetail.textContent = err.stack;
 };

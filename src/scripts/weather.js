@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import {
   isToday,
   toDate,
@@ -12,6 +13,7 @@ import {
 import {
   createForecastData,
   deleteLocalKey,
+  displayErrorAlert,
   getWeatherIconPath,
   parseDegDrctn,
   parseWeekDayName,
@@ -148,9 +150,18 @@ const Weather = (() => {
     }
   };
 
-  const getWeather = async (latitude, longitude) => {
-    const targetData = await fetch(``);
-    const data = await targetData.json();
+  const getWeather = async (latitude, longitude, errorFunc) => {
+    let targetData;
+    let data;
+    try {
+      targetData = await fetch(``);
+
+      data = await targetData.json();
+    } catch (err) {
+      errorFunc(err);
+      return;
+    }
+
     console.log(data);
 
     forecastDataWrpr.innerHTML = "";
@@ -165,22 +176,21 @@ const Weather = (() => {
     const latPos = pos.coords.latitude;
     const longPos = pos.coords.longitude;
 
-    getWeather(latPos, longPos);
+    getWeather(latPos, longPos, displayErrorAlert);
   };
 
-  const getLocation = async (input, rejectCall) => {
+  const getLocation = async (input, errorFunc) => {
     let locations;
     try {
       locations = await fetch(``, { mode: "cors" });
+      return locations.json();
     } catch (err) {
-      rejectCall(err);
+      errorFunc(err);
     }
-
-    return locations.json();
   };
 
-  const getPosition = (rejectCall) => {
-    Geo.getCurrentPosition(getLatAndLong, rejectCall, { timeout: 10000 });
+  const getPosition = (errorFunc) => {
+    Geo.getCurrentPosition(getLatAndLong, errorFunc, { timeout: 10000 });
   };
 
   const obj = {

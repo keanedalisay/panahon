@@ -1,12 +1,16 @@
+/* eslint-disable linebreak-style */
 import Anim from "./anim";
 import Weather from "./weather";
 
 import {
   delegateEvent,
-  elemIsNotHidden,
   storeToLocal,
   getLocalKey,
   getCountryName,
+  toggleAlertPanel,
+  alertHeading,
+  alertDetail,
+  displayErrorAlert,
 } from "./helpers";
 
 import commonStyle from "../styles/common.scss";
@@ -14,11 +18,7 @@ import mainStyle from "../styles/style.scss";
 
 const App = (() => {
   const overlay = document.querySelector("[data-slctr=overlay]");
-  const alertPanel = document.querySelector("[data-slctr=alertPanel]");
-
-  const closeAlertBtn = alertPanel.querySelector("[data-slctr=closeAlertBtn]");
-  const alertHeading = alertPanel.querySelector("[data-slctr=alertHeading]");
-  const alertDetail = alertPanel.querySelector("[data-slctr=alertDetail]");
+  const closeAlertBtn = document.querySelector("[data-slctr=closeAlertBtn]");
 
   const weatherLocInput = document.querySelector(
     "[data-slctr=weatherLocInput]"
@@ -26,14 +26,6 @@ const App = (() => {
   const weatherLocAutocmplt = document.querySelector(
     "[data-slctr=weatherLocAutocmplt]"
   );
-
-  const toggleOverlay = () => {
-    overlay.classList.toggle("elem-hide", elemIsNotHidden(overlay));
-  };
-  const toggleAlertPanel = () => {
-    toggleOverlay();
-    alertPanel.classList.toggle("elem-hide", elemIsNotHidden(alertPanel));
-  };
 
   const displayLocAutocmplt = () => {
     weatherLocAutocmplt.innerHTML = "";
@@ -52,7 +44,6 @@ const App = (() => {
     ${name}</button>`;
     weatherLocAutocmplt.insertAdjacentHTML("beforeend", locAutocmpltValue);
   };
-
   const addLocNotFound = () => {
     const locNotFound = `<div class="autocmplt-alert">
     <p>Location not found.</p>
@@ -60,26 +51,18 @@ const App = (() => {
     weatherLocAutocmplt.insertAdjacentHTML("beforeend", locNotFound);
   };
 
-  const rejectLocation = (err) => {
-    toggleAlertPanel();
-    alertHeading.textContent = err.name;
-    alertDetail.textContent = err.message;
-  };
-  const rejectLocationValue = (err) => {
-    toggleAlertPanel();
-    alertHeading.textContent = err.cod;
-    alertDetail.textContent = err.message;
-  };
-
   const searchWeatherLocation = async (e) => {
     if (!e.target.value || e.key !== "Enter") return;
 
     const loc = weatherLocInput.value;
-    const locations = await Weather.getLocation(loc, rejectLocation);
+    const locations = await Weather.getLocation(loc, displayErrorAlert);
 
     const locationErr = Object.prototype.hasOwnProperty.call(locations, "cod");
     if (locationErr) {
-      rejectLocationValue(locations);
+      toggleAlertPanel();
+      alertHeading.textContent = locations.cod;
+      alertDetail.textContent = locations.message;
+
       return;
     }
 
@@ -120,10 +103,10 @@ const App = (() => {
 
     hideLocAutocmplt();
 
-    Weather.getWeather(locLat, locLong);
+    Weather.getWeather(locLat, locLong, displayErrorAlert);
   };
 
-  const rejectPosition = (error) => {
+  const displayPositionError = (error) => {
     if (getLocalKey("geoLocErr")) return;
 
     const positionError = { code: error.code, message: error.message };
@@ -160,7 +143,7 @@ const App = (() => {
       return;
     }
 
-    Weather.getPosition(rejectPosition);
+    Weather.getPosition(displayPositionError);
   };
 
   const init = () => {
