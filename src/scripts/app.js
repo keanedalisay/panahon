@@ -36,10 +36,12 @@ const App = (() => {
   };
 
   const displayLocAutocmplt = () => {
+    weatherLocAutocmplt.innerHTML = "";
     weatherLocInput.classList.add("widgetPanel-weatherLocInput-autocmpltOn");
     weatherLocAutocmplt.classList.remove("elem-hide");
   };
   const hideLocAutocmplt = () => {
+    weatherLocAutocmplt.innerHTML = "";
     weatherLocInput.classList.remove("widgetPanel-weatherLocInput-autocmpltOn");
     weatherLocAutocmplt.classList.add("elem-hide");
   };
@@ -49,6 +51,13 @@ const App = (() => {
     data-loclat="${coords.lat}" data-loclong="${coords.lon}">
     ${name}</button>`;
     weatherLocAutocmplt.insertAdjacentHTML("beforeend", locAutocmpltValue);
+  };
+
+  const addLocNotFound = () => {
+    const locNotFound = `<div class="autocmplt-alert">
+    <p>Location not found.</p>
+</div>`;
+    weatherLocAutocmplt.insertAdjacentHTML("beforeend", locNotFound);
   };
 
   const getLocValLatAndLong = (e) => {
@@ -69,16 +78,21 @@ const App = (() => {
     const locations = await Weather.getLocation(loc);
 
     console.log(locations);
-    if (locations.length === 0) return;
+    if (locations.length === 0) {
+      displayLocAutocmplt();
+      addLocNotFound();
+      return;
+    }
     if (locations.length === 1) {
       const fstLocLat = locations[0].lat;
       const fstLocLong = locations[0].lon;
 
+      hideLocAutocmplt();
       Weather.getWeather(fstLocLat, fstLocLong);
       return;
     }
 
-    weatherLocAutocmplt.innerHTML = "";
+    displayLocAutocmplt();
     locations.forEach((location) => {
       let locationName = `${location.name}, ${getCountryName(
         location.country
@@ -92,7 +106,6 @@ const App = (() => {
 
       addLocAutocmpltVal(locationName, location);
     });
-    displayLocAutocmplt();
   };
 
   const rejectPosition = (error) => {

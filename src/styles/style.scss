@@ -172,7 +172,17 @@ object {
 }
 .autocmplt-value:hover,
 .autocmplt-value:focus {
-  background: var(--alto);
+  background: var(--seashell);
+}
+.autocmplt-alert {
+  padding: 0 0.5rem;
+  @include widthAndHeight(100%, 100%);
+  @include flexCenter;
+  background: var(--seashell);
+  text-align: center;
+  font-family: "Rubik", Arial, Helvetica, sans-serif;
+  font-size: clamp(1.2rem, 2vw, 1.4rem);
+  color: var(--cornflower-lilac);
 }
 
 .widgetPanel-settingsBtn {
