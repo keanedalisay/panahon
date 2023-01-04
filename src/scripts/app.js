@@ -72,7 +72,7 @@ const App = (() => {
   };
 
   const searchWeatherLocation = async (e) => {
-    if (e.key !== "Enter") return;
+    if (!e.target.value || e.key !== "Enter") return;
 
     const loc = weatherLocInput.value;
     const locations = await Weather.getLocation(loc, rejectLocation);
@@ -173,6 +173,7 @@ const App = (() => {
     });
 
     weatherLocInput.addEventListener("keyup", searchWeatherLocation);
+    weatherLocInput.addEventListener("input", hideLocAutocmplt);
     delegateEvent(
       weatherLocAutocmplt,
       "click",
