@@ -18,6 +18,10 @@ import {
 } from "./helpers";
 
 const Weather = (() => {
+  const forecastDataWrpr = document.querySelector(
+    "[data-slctr=forecastDataWrapper]"
+  );
+
   const Geo = navigator.geolocation ? navigator.geolocation : false;
 
   const setLastUpdate = () => {
@@ -105,9 +109,6 @@ const Weather = (() => {
   };
 
   const forecastToday = (data) => {
-    const forecastDataWrpr = document.querySelector(
-      "[data-slctr=forecastDataWrapper]"
-    );
     let frcstToday;
 
     for (let i = 0; i < data.list.length; i += 1) {
@@ -126,17 +127,10 @@ const Weather = (() => {
       }
     }
 
-    console.log(data);
-    console.log(frcstToday);
-
     setTodaysWeather(frcstToday, data.city);
   };
 
   const forecastNextFourDays = (data) => {
-    const forecastDataWrpr = document.querySelector(
-      "[data-slctr=forecastDataWrapper]"
-    );
-
     let weekDay;
 
     for (let i = 0; i < data.list.length; i += 1) {
@@ -157,7 +151,9 @@ const Weather = (() => {
   const getWeather = async (latitude, longitude) => {
     const targetData = await fetch(``);
     const data = await targetData.json();
+    console.log(data);
 
+    forecastDataWrpr.innerHTML = "";
     forecastToday(data);
     forecastNextFourDays(data);
     setLastUpdate();
@@ -172,6 +168,12 @@ const Weather = (() => {
     getWeather(latPos, longPos);
   };
 
+  const getLocation = async (input) => {
+    const locations = await fetch(``, { mode: "cors" });
+
+    return locations.json();
+  };
+
   const getPosition = (rejectCall) => {
     Geo.getCurrentPosition(getLatAndLong, rejectCall, { timeout: 10000 });
   };
@@ -179,6 +181,7 @@ const Weather = (() => {
   const obj = {
     getPosition,
     getWeather,
+    getLocation,
     Geo,
   };
 

@@ -1,6 +1,11 @@
 import getHours from "date-fns/getHours";
 import parseISO from "date-fns/parseISO";
 
+import countries from "i18n-iso-countries";
+import enLang from "i18n-iso-countries/langs/en.json";
+
+countries.registerLocale(enLang);
+
 import clearDayIcon from "../assets/svgs/clear-sky-day-icon.svg";
 import clearNightIcon from "../assets/svgs/clear-sky-night-icon.svg";
 
@@ -18,6 +23,12 @@ import snowIcon from "../assets/svgs/snow-icon.svg";
 
 import thunderstormIcon from "../assets/svgs/thunderstorm-icon.svg";
 import windCloudIcon from "../assets/svgs/wind-cloud-icon.svg";
+
+export const delegateEvent = (parent, event, slctr, func) => {
+  parent.addEventListener(event, (e) => {
+    if (e.target.matches(slctr)) func(e);
+  });
+};
 
 export const convToHex = (num) => {
   if (num < 16) return "00";
@@ -40,6 +51,10 @@ export const elemIsNotHidden = (elem) => {
 export const storeToLocal = (key, value) => localStorage.setItem(key, value);
 export const getLocalKey = (key) => localStorage.getItem(key);
 export const deleteLocalKey = (key) => localStorage.removeItem(key);
+
+export const getCountryName = (cntryCode) => {
+  return countries.getName(cntryCode, "en", { select: "alias" });
+};
 
 export const parseWeekDayName = (weekDayNum) => {
   let weekDay;
