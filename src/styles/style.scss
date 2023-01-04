@@ -157,13 +157,14 @@ object {
 }
 .autocmplt--weatherLoc {
   @include widthAndHeight(clamp(15rem, 50vw, 30rem), 10.8rem);
-  border-top: 0.3rem solid var(--alto);
+  border-top: 0.1rem solid var(--alto);
   border-radius: 0 0 1rem 1rem;
   position: absolute;
   top: 6.5rem;
   overflow: auto;
 }
 .autocmplt-value {
+  padding: 0 0.5rem;
   @include widthAndHeight(100%, 3.5rem);
   background: var(--white);
   font-family: "Rubik", Arial, Helvetica, sans-serif;
