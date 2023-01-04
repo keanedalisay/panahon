@@ -168,8 +168,13 @@ const Weather = (() => {
     getWeather(latPos, longPos);
   };
 
-  const getLocation = async (input) => {
-    const locations = await fetch(``, { mode: "cors" });
+  const getLocation = async (input, rejectCall) => {
+    let locations;
+    try {
+      locations = await fetch(``, { mode: "cors" });
+    } catch (err) {
+      rejectCall(err);
+    }
 
     return locations.json();
   };

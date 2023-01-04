@@ -60,24 +60,29 @@ const App = (() => {
     weatherLocAutocmplt.insertAdjacentHTML("beforeend", locNotFound);
   };
 
-  const getLocValLatAndLong = (e) => {
-    const locAutocmpltVal = e.target;
-    const locLat = locAutocmpltVal.dataset.loclat;
-    const locLong = locAutocmpltVal.dataset.loclong;
-
-    weatherLocAutocmplt.innerHTML = "";
-    hideLocAutocmplt();
-
-    Weather.getWeather(locLat, locLong);
+  const rejectLocation = (err) => {
+    toggleAlertPanel();
+    alertHeading.textContent = err.name;
+    alertDetail.textContent = err.message;
+  };
+  const rejectLocationValue = (err) => {
+    toggleAlertPanel();
+    alertHeading.textContent = err.cod;
+    alertDetail.textContent = err.message;
   };
 
   const searchWeatherLocation = async (e) => {
     if (e.key !== "Enter") return;
 
     const loc = weatherLocInput.value;
-    const locations = await Weather.getLocation(loc);
+    const locations = await Weather.getLocation(loc, rejectLocation);
 
-    console.log(locations);
+    const locationErr = Object.prototype.hasOwnProperty.call(locations, "cod");
+    if (locationErr) {
+      rejectLocationValue(locations);
+      return;
+    }
+
     if (locations.length === 0) {
       displayLocAutocmplt();
       addLocNotFound();
@@ -106,6 +111,16 @@ const App = (() => {
 
       addLocAutocmpltVal(locationName, location);
     });
+  };
+
+  const getLocValLatAndLong = (e) => {
+    const locAutocmpltVal = e.target;
+    const locLat = locAutocmpltVal.dataset.loclat;
+    const locLong = locAutocmpltVal.dataset.loclong;
+
+    hideLocAutocmplt();
+
+    Weather.getWeather(locLat, locLong);
   };
 
   const rejectPosition = (error) => {
