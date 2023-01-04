@@ -10,7 +10,7 @@
 }
 @mixin flexCenterColumn {
   @include flexCenter;
-  flex-flow: column wrap;
+  flex-flow: column nowrap;
 }
 @mixin gridFourEvenColumns {
   display: grid;
@@ -53,6 +53,10 @@ body::-webkit-scrollbar-thumb {
 }
 body::-webkit-scrollbar-thumb:hover {
   background: #212121bb;
+}
+
+object {
+  pointer-events: none;
 }
 
 .overlay {
@@ -117,12 +121,13 @@ body::-webkit-scrollbar-thumb:hover {
 .widgetPanel {
   padding: 2rem 0;
   width: 100%;
+  position: relative;
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
   align-items: center;
 }
-.widgetPanel-searchInput {
+.widgetPanel-weatherLocInput {
   padding: 0.5rem 1rem;
   @include widthAndHeight(clamp(15rem, 50vw, 30rem), 4rem);
   border-radius: 1rem;
@@ -130,6 +135,55 @@ body::-webkit-scrollbar-thumb:hover {
   font-family: "Rubik", Arial, Helvetica, sans-serif;
   color: var(--mine-shaft);
 }
+.widgetPanel-weatherLocInput-autocmpltOn {
+  border-radius: 1rem 1rem 0 0;
+}
+
+.autocmplt {
+  background: var(--white);
+  font-family: "Rubik", Arial, Helvetica, sans-serif;
+  color: var(--mine-shaft);
+}
+.autocmplt::-webkit-scrollbar {
+  width: 0.5rem;
+  background: var(--white);
+}
+.autocmplt::-webkit-scrollbar-thumb {
+  background: #212121aa;
+}
+.autocmplt::-webkit-scrollbar-thumb:hover {
+  background: #212121bb;
+}
+.autocmplt--weatherLoc {
+  @include widthAndHeight(clamp(15rem, 50vw, 30rem), 10.8rem);
+  border-top: 0.1rem solid var(--alto);
+  border-radius: 0 0 1rem 1rem;
+  position: absolute;
+  top: 6.5rem;
+  overflow: auto;
+}
+.autocmplt-value {
+  padding: 0 0.5rem;
+  @include widthAndHeight(100%, 3.5rem);
+  background: var(--white);
+  font-family: "Rubik", Arial, Helvetica, sans-serif;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+}
+.autocmplt-value:hover,
+.autocmplt-value:focus {
+  background: var(--seashell);
+}
+.autocmplt-alert {
+  padding: 0 0.5rem;
+  @include widthAndHeight(100%, 100%);
+  @include flexCenter;
+  background: var(--seashell);
+  text-align: center;
+  font-family: "Rubik", Arial, Helvetica, sans-serif;
+  font-size: clamp(1.2rem, 2vw, 1.4rem);
+  color: var(--cornflower-lilac);
+}
+
 .widgetPanel-settingsBtn {
   @include widthAndHeight(5rem, 5rem);
   background: transparent;
