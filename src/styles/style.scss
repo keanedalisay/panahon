@@ -197,6 +197,91 @@ object {
   border-radius: 1rem;
 }
 
+.dropdown {
+  padding: 4.5rem 0 0.5rem 0;
+  @include flexCenterColumn;
+  background: var(--white);
+  z-index: 1;
+}
+.dropdown--settings {
+  width: clamp(12.5rem, 30vw, 15rem);
+  border-radius: 1rem;
+  position: absolute;
+  top: 8rem;
+  right: 2.5rem;
+
+  .dropdown-closeBtn {
+    @include widthAndHeight(3rem, 3rem);
+    @include flexCenter;
+    position: absolute;
+    top: 1rem;
+    left: 40%;
+    background: var(--white);
+    border-radius: 5rem;
+
+    .icon {
+      @include widthAndHeight(2rem, 2rem);
+    }
+  }
+  .dropdown-closeBtn:hover,
+  .dropdown-closeBtn:focus {
+    border: 0.1rem solid var(--mine-shaft);
+  }
+
+  .convertTemp {
+    @include widthAndHeight(100%, 3.5rem);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: center;
+    align-items: center;
+  }
+}
+.convertTemp-celsius,
+.convertTemp-fahrenheit {
+  height: 100%;
+  background-color: var(--white);
+  @include flexCenter;
+  font-family: "Rubik", Arial, Helvetica, sans-serif;
+  font-size: 1.4rem;
+  color: var(--mine-shaft);
+
+  .signal {
+    margin-left: 0.5rem;
+    @include widthAndHeight(1.5rem, 1.5rem);
+    background: var(--alto);
+    border-radius: 5rem;
+  }
+  .signal-isActivated {
+    background: var(--reef);
+  }
+}
+.convertTemp-celsius:hover,
+.convertTemp-celsius:focus,
+.convertTemp-fahrenheit:hover,
+.convertTemp-fahrenheit:focus {
+  background: var(--seashell);
+}
+.dropdown-btn {
+  @include widthAndHeight(100%, 3.5rem);
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  grid-auto-flow: column;
+  column-gap: 1rem;
+  text-decoration: none;
+  font-family: "Rubik", Arial, Helvetica, sans-serif;
+  font-size: 1.4rem;
+  color: var(--mine-shaft);
+
+  .icon {
+    @include widthAndHeight(1.5rem, 1.5rem);
+  }
+}
+.dropdown-btn:hover,
+.dropdown-btn:focus {
+  background: var(--seashell);
+}
+
 .mainWeatherPanel {
   margin: 1rem 0;
   padding: 0 1rem;
