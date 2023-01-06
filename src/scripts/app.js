@@ -11,6 +11,8 @@ import {
   alertHeading,
   alertDetail,
   displayErrorAlert,
+  elemIsNotHidden,
+  toggleOverlay,
 } from "./helpers";
 
 import commonStyle from "../styles/common.scss";
@@ -27,6 +29,12 @@ const App = (() => {
     "[data-slctr=weatherLocAutocmplt]"
   );
 
+  const settingsBtn = document.querySelector("[data-slctr=settingsBtn]");
+  const settingsDrpdwn = document.querySelector("[data-slctr=settingsDrpdwn]");
+  const closeSettingsDrpdwnBtn = document.querySelector(
+    "[data-slctr=closeSettingsDrpdwnBtn]"
+  );
+
   const displayLocAutocmplt = () => {
     weatherLocAutocmplt.innerHTML = "";
     weatherLocInput.classList.add("widgetPanel-weatherLocInput-autocmpltOn");
@@ -37,6 +45,10 @@ const App = (() => {
     weatherLocInput.classList.remove("widgetPanel-weatherLocInput-autocmpltOn");
     weatherLocAutocmplt.classList.add("elem-hide");
   };
+
+  const displaySettingsDrpdwn = () =>
+    settingsDrpdwn.classList.remove("elem-hide");
+  const hideSettingsDrpdwn = () => settingsDrpdwn.classList.add("elem-hide");
 
   const addLocAutocmpltVal = (name, coords) => {
     const locAutocmpltValue = `<button class="autocmplt-value" 
@@ -163,6 +175,9 @@ const App = (() => {
       ".autocmplt-value",
       getLocValLatAndLong
     );
+
+    settingsBtn.addEventListener("click", displaySettingsDrpdwn);
+    closeSettingsDrpdwnBtn.addEventListener("click", hideSettingsDrpdwn);
   };
 
   return { init, checkGeoLocAPI };
