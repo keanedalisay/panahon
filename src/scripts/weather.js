@@ -101,6 +101,10 @@ const ForecastDataTemp = (weekDay, frcst, data) => {
 };
 
 const WeatherDOMTemp = () => {
+  const forecastDataWrapper = document.querySelector(
+    "[data-slctr=forecastDataWrapper]"
+  );
+
   const setTempLabels = (frcst) => {
     const mainTempLabel = document.querySelector("[data-slctr=mainTempLabel]");
     const maxTempLabel = document.querySelector("[data-slctr=maxTempLabel]");
@@ -187,10 +191,6 @@ const WeatherDOMTemp = () => {
     setWeatherDetails(frcst);
     setSuntime(city);
   };
-
-  const forecastDataWrapper = document.querySelector(
-    "[data-slctr=forecastDataWrapper]"
-  );
 
   const forecastToday = (data) => {
     forecastDataWrapper.innerHTML = "";

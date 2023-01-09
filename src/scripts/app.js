@@ -9,8 +9,6 @@ import {
   displayErrorAlert,
   ShowElemTemp,
   HideElemTemp,
-  getSignalElem,
-  setMeasureSignal,
 } from "./helpers/dom-helpers";
 
 import {
@@ -76,6 +74,9 @@ const Settings = (() => {
     "[data-slctr=convertToFBtn]"
   );
 
+  const celsiusSignal = convertToCelsiusBtn.querySelector(".signal");
+  const fahrenheitSignal = convertToFahrenheitBtn.querySelector(".signal");
+
   const showDropdown = ShowElemTemp(settingsDrpdwn);
   const hideDropdown = HideElemTemp(settingsDrpdwn);
 
@@ -83,10 +84,8 @@ const Settings = (() => {
     if (crntTempIsCelsius()) return;
     if (!getLocalKey("crntLat") && !getLocalKey("crntLong")) return;
 
-    getSignalElem(convertToCelsiusBtn).classList.add("signal-isActivated");
-    getSignalElem(convertToFahrenheitBtn).classList.remove(
-      "signal-isActivated"
-    );
+    celsiusSignal.classList.add("signal-isActivated");
+    fahrenheitSignal.classList.remove("signal-isActivated");
 
     convertToCelsiusBtn.dataset.isCelsius = "true";
     convertToFahrenheitBtn.dataset.isFahrenheit = "";
@@ -101,8 +100,8 @@ const Settings = (() => {
     if (crntTempIsFahrenheit()) return;
     if (!getLocalKey("crntLat") && !getLocalKey("crntLong")) return;
 
-    getSignalElem(convertToCelsiusBtn).classList.remove("signal-isActivated");
-    getSignalElem(convertToFahrenheitBtn).classList.add("signal-isActivated");
+    celsiusSignal.classList.remove("signal-isActivated");
+    fahrenheitSignal.classList.add("signal-isActivated");
 
     convertToCelsiusBtn.dataset.isCelsius = "";
     convertToFahrenheitBtn.dataset.isFahrenheit = "true";
@@ -111,6 +110,23 @@ const Settings = (() => {
     const crntLong = getLocalKey("crntLong");
 
     Weather.getWeather(crntLat, crntLong, displayErrorAlert, "imperial");
+  };
+
+  const setMeasureSignal = () => {
+    if (getLocalKey("crntMeasureUnit") === "metric") {
+      celsiusSignal.classList.add("signal-isActivated");
+      fahrenheitSignal.classList.remove("signal-isActivated");
+
+      convertToCelsiusBtn.dataset.isCelsius = "true";
+      convertToFahrenheitBtn.dataset.isFahrenheit = "";
+      return;
+    }
+
+    celsiusSignal.classList.remove("signal-isActivated");
+    fahrenheitSignal.classList.add("signal-isActivated");
+
+    convertToCelsiusBtn.dataset.isCelsius = "";
+    convertToFahrenheitBtn.dataset.isFahrenheit = "true";
   };
 
   const init = () => {
@@ -125,7 +141,7 @@ const Settings = (() => {
     convertToFahrenheitBtn.addEventListener("click", convertToFahrenheit);
   };
 
-  return { init, showDropdown, hideDropdown };
+  return { init };
 })();
 
 const App = (() => {
