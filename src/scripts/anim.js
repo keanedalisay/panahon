@@ -1,4 +1,4 @@
-import { convToHex, clampRgbVal } from "./helpers";
+import { convToHex, clampRgbVal } from "./helpers/data-helpers";
 
 const FadeElemBkgrdTemp = (elem) => {
   const targetElem = elem;

@@ -1,25 +1,86 @@
 /* eslint-disable linebreak-style */
+
 import Anim from "./anim";
 import Weather from "./weather";
 
 import {
   delegateEvent,
+  toggleAlertPanel,
+  displayErrorAlert,
+  ShowElemTemp,
+  HideElemTemp,
+} from "./helpers/dom-helpers";
+
+import {
   storeToLocal,
   getLocalKey,
   getCountryName,
-  toggleAlertPanel,
-  alertHeading,
-  alertDetail,
-  displayErrorAlert,
-  elemIsNotHidden,
-  toggleOverlay,
-} from "./helpers";
+} from "./helpers/data-helpers";
 
 import commonStyle from "../styles/common.scss";
 import mainStyle from "../styles/style.scss";
 
+const LocationAutocmplt = (() => {
+  const weatherLocInput = document.querySelector(
+    "[data-slctr=weatherLocInput]"
+  );
+  const weatherLocAutocmplt = document.querySelector(
+    "[data-slctr=weatherLocAutocmplt]"
+  );
+
+  const show = () => {
+    weatherLocAutocmplt.innerHTML = "";
+    weatherLocInput.classList.add("widgetPanel-weatherLocInput-autocmpltOn");
+    weatherLocAutocmplt.classList.remove("elem-hide");
+  };
+  const hide = () => {
+    weatherLocAutocmplt.innerHTML = "";
+    weatherLocInput.classList.remove("widgetPanel-weatherLocInput-autocmpltOn");
+    weatherLocAutocmplt.classList.add("elem-hide");
+  };
+
+  const autocmpltVal = (name, coords) => {
+    const locAutocmpltValue = `<button class="autocmplt-value" 
+          data-loclat="${coords.lat}" data-loclong="${coords.lon}">
+          ${name}</button>`;
+    weatherLocAutocmplt.insertAdjacentHTML("beforeend", locAutocmpltValue);
+  };
+
+  const autocmpltAlert = () => {
+    const locNotFound = `<div class="autocmplt-alert">
+      <p>Location not found.</p>
+  </div>`;
+    weatherLocAutocmplt.insertAdjacentHTML("beforeend", locNotFound);
+  };
+
+  const add = { autocmpltVal, autocmpltAlert };
+
+  return { show, hide, add };
+})();
+
+const Settings = (() => {
+  const settingsBtn = document.querySelector("[data-slctr=settingsBtn]");
+  const settingsDrpdwn = document.querySelector("[data-slctr=settingsDrpdwn]");
+  const closeSettingsBtn = document.querySelector(
+    "[data-slctr=closeSettingsDrpdwnBtn]"
+  );
+
+  const showDropdown = ShowElemTemp(settingsDrpdwn);
+  const hideDropdown = HideElemTemp(settingsDrpdwn);
+
+  const init = () => {
+    settingsBtn.addEventListener("click", showDropdown);
+    closeSettingsBtn.addEventListener("click", hideDropdown);
+  };
+
+  return { init, showDropdown, hideDropdown };
+})();
+
 const App = (() => {
   const overlay = document.querySelector("[data-slctr=overlay]");
+
+  const alertHeading = document.querySelector("[data-slctr=alertHeading]");
+  const alertDetail = document.querySelector("[data-slctr=alertDetail]");
   const closeAlertBtn = document.querySelector("[data-slctr=closeAlertBtn]");
 
   const weatherLocInput = document.querySelector(
@@ -29,45 +90,14 @@ const App = (() => {
     "[data-slctr=weatherLocAutocmplt]"
   );
 
-  const settingsBtn = document.querySelector("[data-slctr=settingsBtn]");
-  const settingsDrpdwn = document.querySelector("[data-slctr=settingsDrpdwn]");
-  const closeSettingsDrpdwnBtn = document.querySelector(
-    "[data-slctr=closeSettingsDrpdwnBtn]"
-  );
-
-  const displayLocAutocmplt = () => {
-    weatherLocAutocmplt.innerHTML = "";
-    weatherLocInput.classList.add("widgetPanel-weatherLocInput-autocmpltOn");
-    weatherLocAutocmplt.classList.remove("elem-hide");
-  };
-  const hideLocAutocmplt = () => {
-    weatherLocAutocmplt.innerHTML = "";
-    weatherLocInput.classList.remove("widgetPanel-weatherLocInput-autocmpltOn");
-    weatherLocAutocmplt.classList.add("elem-hide");
-  };
-
-  const displaySettingsDrpdwn = () =>
-    settingsDrpdwn.classList.remove("elem-hide");
-  const hideSettingsDrpdwn = () => settingsDrpdwn.classList.add("elem-hide");
-
-  const addLocAutocmpltVal = (name, coords) => {
-    const locAutocmpltValue = `<button class="autocmplt-value" 
-    data-loclat="${coords.lat}" data-loclong="${coords.lon}">
-    ${name}</button>`;
-    weatherLocAutocmplt.insertAdjacentHTML("beforeend", locAutocmpltValue);
-  };
-  const addLocNotFound = () => {
-    const locNotFound = `<div class="autocmplt-alert">
-    <p>Location not found.</p>
-</div>`;
-    weatherLocAutocmplt.insertAdjacentHTML("beforeend", locNotFound);
-  };
-
   const searchWeatherLocation = async (e) => {
     if (!e.target.value || e.key !== "Enter") return;
 
-    const loc = weatherLocInput.value;
-    const locations = await Weather.getLocation(loc, displayErrorAlert);
+    const locationInput = e.target.value;
+    const locations = await Weather.getLocation(
+      locationInput,
+      displayErrorAlert
+    );
 
     const locationErr = Object.prototype.hasOwnProperty.call(locations, "cod");
     if (locationErr) {
@@ -79,20 +109,20 @@ const App = (() => {
     }
 
     if (locations.length === 0) {
-      displayLocAutocmplt();
-      addLocNotFound();
+      LocationAutocmplt.show();
+      LocationAutocmplt.add.autocmpltAlert();
       return;
     }
     if (locations.length === 1) {
       const fstLocLat = locations[0].lat;
       const fstLocLong = locations[0].lon;
 
-      hideLocAutocmplt();
+      LocationAutocmplt.hide();
       Weather.getWeather(fstLocLat, fstLocLong);
       return;
     }
 
-    displayLocAutocmplt();
+    LocationAutocmplt.show();
     locations.forEach((location) => {
       let locationName = `${location.name}, ${getCountryName(
         location.country
@@ -104,7 +134,7 @@ const App = (() => {
       );
       if (hasStateProp) locationName += `, ${location.state}`;
 
-      addLocAutocmpltVal(locationName, location);
+      LocationAutocmplt.add.autocmpltVal(locationName, location);
     });
   };
 
@@ -113,7 +143,7 @@ const App = (() => {
     const locLat = locAutocmpltVal.dataset.loclat;
     const locLong = locAutocmpltVal.dataset.loclong;
 
-    hideLocAutocmplt();
+    LocationAutocmplt.hide();
 
     Weather.getWeather(locLat, locLong, displayErrorAlert);
   };
@@ -168,7 +198,7 @@ const App = (() => {
     });
 
     weatherLocInput.addEventListener("keyup", searchWeatherLocation);
-    weatherLocInput.addEventListener("input", hideLocAutocmplt);
+    weatherLocInput.addEventListener("input", LocationAutocmplt.hide);
     delegateEvent(
       weatherLocAutocmplt,
       "click",
@@ -176,14 +206,12 @@ const App = (() => {
       getLocValLatAndLong
     );
 
-    settingsBtn.addEventListener("click", displaySettingsDrpdwn);
-    closeSettingsDrpdwnBtn.addEventListener("click", hideSettingsDrpdwn);
+    Anim.init();
+    Settings.init();
+    App.checkGeoLocAPI();
   };
 
   return { init, checkGeoLocAPI };
 })();
 
-Anim.init();
-
-App.checkGeoLocAPI();
 App.init();
