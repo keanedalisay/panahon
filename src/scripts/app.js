@@ -82,7 +82,6 @@ const Settings = (() => {
 
   const convertToCelsius = () => {
     if (crntTempIsCelsius()) return;
-    if (!getLocalKey("crntLat") && !getLocalKey("crntLong")) return;
 
     celsiusSignal.classList.add("signal-isActivated");
     fahrenheitSignal.classList.remove("signal-isActivated");
@@ -98,7 +97,6 @@ const Settings = (() => {
 
   const convertToFahrenheit = () => {
     if (crntTempIsFahrenheit()) return;
-    if (!getLocalKey("crntLat") && !getLocalKey("crntLong")) return;
 
     celsiusSignal.classList.remove("signal-isActivated");
     fahrenheitSignal.classList.add("signal-isActivated");
@@ -113,20 +111,20 @@ const Settings = (() => {
   };
 
   const setMeasureSignal = () => {
-    if (getLocalKey("crntMeasureUnit") === "metric") {
-      celsiusSignal.classList.add("signal-isActivated");
-      fahrenheitSignal.classList.remove("signal-isActivated");
+    if (getLocalKey("crntMeasureUnit") === "imperial") {
+      celsiusSignal.classList.remove("signal-isActivated");
+      fahrenheitSignal.classList.add("signal-isActivated");
 
-      convertToCelsiusBtn.dataset.isCelsius = "true";
-      convertToFahrenheitBtn.dataset.isFahrenheit = "";
+      convertToCelsiusBtn.dataset.isCelsius = "";
+      convertToFahrenheitBtn.dataset.isFahrenheit = "true";
       return;
     }
 
-    celsiusSignal.classList.remove("signal-isActivated");
-    fahrenheitSignal.classList.add("signal-isActivated");
+    celsiusSignal.classList.add("signal-isActivated");
+    fahrenheitSignal.classList.remove("signal-isActivated");
 
-    convertToCelsiusBtn.dataset.isCelsius = "";
-    convertToFahrenheitBtn.dataset.isFahrenheit = "true";
+    convertToCelsiusBtn.dataset.isCelsius = "true";
+    convertToFahrenheitBtn.dataset.isFahrenheit = "";
   };
 
   const init = () => {
@@ -268,6 +266,17 @@ const App = (() => {
   };
 
   const init = () => {
+    Anim.init();
+    Settings.init();
+    App.checkGeoLocAPI();
+
+    Weather.getWeather(
+      getLocalKey("crntLat"),
+      getLocalKey("crntLong"),
+      displayErrorAlert,
+      getLocalKey("crntMeasureUnit")
+    );
+
     closeAlertBtn.addEventListener("click", () => {
       toggleAlertPanel();
     });
@@ -284,10 +293,6 @@ const App = (() => {
       ".autocmplt-value",
       getLocValLatAndLong
     );
-
-    Anim.init();
-    Settings.init();
-    App.checkGeoLocAPI();
   };
 
   return { init, checkGeoLocAPI };
