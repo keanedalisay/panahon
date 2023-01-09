@@ -16,6 +16,10 @@ import {
   parseDegDrctn,
   parseWeekDayName,
   deleteLocalKey,
+  storeToLocal,
+  getLocalKey,
+  getTempSymbol,
+  convSpeedSymbol,
 } from "./helpers/data-helpers";
 
 import clearDayIcon from "../assets/svgs/clear-sky-day-icon.svg";
@@ -76,6 +80,8 @@ const ForecastDataTemp = (weekDay, frcst, data) => {
   const frcstHours = getHours(parseISO(data.dt_txt));
   const frcstWeatherIconPath = getWeatherIconPath(frcstWeatherDesc, frcstHours);
 
+  const tempSymbol = getTempSymbol(getLocalKey("crntMeasureUnit"));
+
   const frcstData = `<div class="forecastData">
     <div class="forecastData-day">
         <span><strong>${weekDay}</strong></span>
@@ -87,7 +93,7 @@ const ForecastDataTemp = (weekDay, frcst, data) => {
         <span>${frcstPrecipChance}%</span>
     </div>
     <div class="forecastData-maxMinTemp">
-        <span>${frcstTempMax}°C / ${frcstTempMin}°C</span>
+        <span>${frcstTempMax}${tempSymbol} / ${frcstTempMin}${tempSymbol}</span>
     </div>
   </div>`;
 
@@ -103,10 +109,21 @@ const WeatherDOMTemp = () => {
       "[data-slctr=feelsTempLabel]"
     );
 
-    mainTempLabel.textContent = `${Math.floor(frcst.main.temp)}°C`;
-    maxTempLabel.textContent = `${Math.floor(frcst.main.temp_max)}°C`;
-    minTempLabel.textContent = `${Math.floor(frcst.main.temp_min)}°C`;
-    feelsTempLabel.textContent = `${Math.floor(frcst.main.feels_like)}°C`;
+    const tempSymbol = getTempSymbol(getLocalKey("crntMeasureUnit"));
+
+    mainTempLabel.textContent = `${Math.floor(frcst.main.temp)}${tempSymbol}`;
+
+    maxTempLabel.textContent = `${Math.floor(
+      frcst.main.temp_max
+    )}${tempSymbol}`;
+
+    minTempLabel.textContent = `${Math.floor(
+      frcst.main.temp_min
+    )}${tempSymbol}`;
+
+    feelsTempLabel.textContent = `${Math.floor(
+      frcst.main.feels_like
+    )}${tempSymbol}`;
   };
 
   const setWeather = (frcst) => {
@@ -137,10 +154,11 @@ const WeatherDOMTemp = () => {
     const windDirLabel = document.querySelector("[data-slctr=windDirLabel]");
 
     const hasRainProp = Object.prototype.hasOwnProperty.call(frcst, "rain");
+    const speedSymbol = convSpeedSymbol(getLocalKey("crntMeasureUnit"));
 
     rainVolLabel.textContent = `${hasRainProp ? frcst.rain["3h"] : 0} mm`;
     humidityLabel.textContent = `${frcst.main.humidity}%`;
-    windSpeedLabel.textContent = `${frcst.wind.speed} m/s`;
+    windSpeedLabel.textContent = `${frcst.wind.speed} ${speedSymbol}`;
     windDirLabel.textContent = `${parseDegDrctn(frcst.wind.deg)}`;
   };
 
@@ -236,7 +254,11 @@ const Weather = (() => {
   const DOM = WeatherDOMTemp();
   const Geo = navigator.geolocation ? navigator.geolocation : false;
 
-  const getWeather = async (latitude, longitude, errorFunc) => {
+  const getWeather = async (latitude, longitude, errorFunc, unit) => {
+    storeToLocal("crntLat", latitude);
+    storeToLocal("crntLong", longitude);
+    storeToLocal("crntMeasureUnit", unit);
+
     let targetData;
     let data;
     try {
@@ -259,7 +281,12 @@ const Weather = (() => {
     const latPos = pos.coords.latitude;
     const longPos = pos.coords.longitude;
 
-    getWeather(latPos, longPos, displayErrorAlert);
+    getWeather(
+      latPos,
+      longPos,
+      displayErrorAlert,
+      getLocalKey("crntMeasureUnit")
+    );
   };
 
   const getLocation = async (input, errorFunc) => {

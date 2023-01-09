@@ -9,12 +9,16 @@ import {
   displayErrorAlert,
   ShowElemTemp,
   HideElemTemp,
+  getSignalElem,
+  setMeasureSignal,
 } from "./helpers/dom-helpers";
 
 import {
   storeToLocal,
   getLocalKey,
   getCountryName,
+  crntTempIsFahrenheit,
+  crntTempIsCelsius,
 } from "./helpers/data-helpers";
 
 import commonStyle from "../styles/common.scss";
@@ -65,12 +69,60 @@ const Settings = (() => {
     "[data-slctr=closeSettingsDrpdwnBtn]"
   );
 
+  const convertToCelsiusBtn = document.querySelector(
+    "[data-slctr=convertToCBtn]"
+  );
+  const convertToFahrenheitBtn = document.querySelector(
+    "[data-slctr=convertToFBtn]"
+  );
+
   const showDropdown = ShowElemTemp(settingsDrpdwn);
   const hideDropdown = HideElemTemp(settingsDrpdwn);
 
+  const convertToCelsius = () => {
+    if (crntTempIsCelsius()) return;
+    if (!getLocalKey("crntLat") && !getLocalKey("crntLong")) return;
+
+    getSignalElem(convertToCelsiusBtn).classList.add("signal-isActivated");
+    getSignalElem(convertToFahrenheitBtn).classList.remove(
+      "signal-isActivated"
+    );
+
+    convertToCelsiusBtn.dataset.isCelsius = "true";
+    convertToFahrenheitBtn.dataset.isFahrenheit = "";
+
+    const crntLat = getLocalKey("crntLat");
+    const crntLong = getLocalKey("crntLong");
+
+    Weather.getWeather(crntLat, crntLong, displayErrorAlert, "metric");
+  };
+
+  const convertToFahrenheit = () => {
+    if (crntTempIsFahrenheit()) return;
+    if (!getLocalKey("crntLat") && !getLocalKey("crntLong")) return;
+
+    getSignalElem(convertToCelsiusBtn).classList.remove("signal-isActivated");
+    getSignalElem(convertToFahrenheitBtn).classList.add("signal-isActivated");
+
+    convertToCelsiusBtn.dataset.isCelsius = "";
+    convertToFahrenheitBtn.dataset.isFahrenheit = "true";
+
+    const crntLat = getLocalKey("crntLat");
+    const crntLong = getLocalKey("crntLong");
+
+    Weather.getWeather(crntLat, crntLong, displayErrorAlert, "imperial");
+  };
+
   const init = () => {
+    if (!getLocalKey("crntMeasureUnit"))
+      storeToLocal("crntMeasureUnit", "metric");
+
+    setMeasureSignal();
+
     settingsBtn.addEventListener("click", showDropdown);
     closeSettingsBtn.addEventListener("click", hideDropdown);
+    convertToCelsiusBtn.addEventListener("click", convertToCelsius);
+    convertToFahrenheitBtn.addEventListener("click", convertToFahrenheit);
   };
 
   return { init, showDropdown, hideDropdown };
@@ -118,7 +170,13 @@ const App = (() => {
       const fstLocLong = locations[0].lon;
 
       LocationAutocmplt.hide();
-      Weather.getWeather(fstLocLat, fstLocLong);
+
+      Weather.getWeather(
+        fstLocLat,
+        fstLocLong,
+        displayErrorAlert,
+        getLocalKey("crntMeasureUnit")
+      );
       return;
     }
 
@@ -145,7 +203,12 @@ const App = (() => {
 
     LocationAutocmplt.hide();
 
-    Weather.getWeather(locLat, locLong, displayErrorAlert);
+    Weather.getWeather(
+      locLat,
+      locLong,
+      displayErrorAlert,
+      getLocalKey("crntMeasureUnit")
+    );
   };
 
   const displayPositionError = (error) => {

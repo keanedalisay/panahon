@@ -75,3 +75,33 @@ export const clampRgbVal = (val, maxVal) => {
 
   return val;
 };
+
+export const crntTempIsCelsius = () => {
+  const convertToCelsiusBtn = document.querySelector(
+    "[data-slctr=convertToCBtn]"
+  );
+
+  const result = Boolean(convertToCelsiusBtn.dataset.isCelsius);
+
+  return result;
+};
+
+export const crntTempIsFahrenheit = () => {
+  const convertToFahrenheitBtn = document.querySelector(
+    "[data-slctr=convertToFBtn]"
+  );
+
+  const result = Boolean(convertToFahrenheitBtn.dataset.isFahrenheit);
+
+  return result;
+};
+
+export const getTempSymbol = (tempUnit) => {
+  if (tempUnit === "metric") return "°C";
+  return "°F";
+};
+
+export const convSpeedSymbol = (speedUnit) => {
+  if (speedUnit === "metric") return "m/s";
+  return "mph";
+};
