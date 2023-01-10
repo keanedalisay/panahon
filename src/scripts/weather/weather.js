@@ -10,7 +10,7 @@ import {
   differenceInHours,
 } from "date-fns";
 
-import { displayErrorAlert } from "./helpers/dom-helpers";
+import { displayErrorAlert } from "../helpers/dom-helpers";
 
 import {
   parseDegDrctn,
@@ -20,64 +20,17 @@ import {
   getLocalKey,
   getTempSymbol,
   convSpeedSymbol,
-} from "./helpers/data-helpers";
+} from "../helpers/data-helpers";
 
-import clearDayIcon from "../assets/svgs/clear-sky-day-icon.svg";
-import clearNightIcon from "../assets/svgs/clear-sky-night-icon.svg";
+import getWeatherIconPath from "./weather-icon";
 
-import fewCloudsDayIcon from "../assets/svgs/few-clouds-day-icon.svg";
-import fewCloudsNightIcon from "../assets/svgs/few-clouds-night-icon.svg";
-
-import scatteredCloudsIcon from "../assets/svgs/scattered-clouds-icon.svg";
-import brokenCloudsIcon from "../assets/svgs/broken-clouds-icon.svg";
-
-import showerRainDayIcon from "../assets/svgs/shower-rain-day-icon.svg";
-import showerRainNightIcon from "../assets/svgs/shower-rain-night-icon.svg";
-
-import rainIcon from "../assets/svgs/rain-icon.svg";
-import snowIcon from "../assets/svgs/snow-icon.svg";
-
-import thunderstormIcon from "../assets/svgs/thunderstorm-icon.svg";
-import windCloudIcon from "../assets/svgs/wind-cloud-icon.svg";
-
-const getWeatherIconPath = (string, hours) => {
-  let iconPath = "";
-
-  if (/clear sky/i.test(string)) {
-    iconPath = hours > 17 ? clearNightIcon : clearDayIcon;
-  } else if (
-    /mist/i.test(string) ||
-    /fog/i.test(string) ||
-    /smoke/i.test(string) ||
-    /haze/i.test(string) ||
-    /sand/i.test(string) ||
-    /dust/i.test(string) ||
-    /ash/i.test(string) ||
-    /squall/i.test(string) ||
-    /tornado/i.test(string)
-  ) {
-    iconPath = windCloudIcon;
-  } else if (/few clouds/i.test(string)) {
-    iconPath = hours > 17 ? fewCloudsNightIcon : fewCloudsDayIcon;
-  } else if (/scattered clouds/i.test(string)) iconPath = scatteredCloudsIcon;
-  else if (/broken clouds/i.test(string) || /overcast clouds/i.test(string)) {
-    iconPath = brokenCloudsIcon;
-  } else if (/thunderstorm/i.test(string)) iconPath = thunderstormIcon;
-  else if (/snow/i.test(string) || /sleet/.test(string)) iconPath = snowIcon;
-  else if (/shower rain/i.test(string) || /drizzle/.test(string)) {
-    iconPath = hours > 17 ? showerRainNightIcon : showerRainDayIcon;
-  } else if (/rain/i.test(string)) iconPath = rainIcon;
-
-  return iconPath;
-};
-
-const ForecastDataTemp = (weekDay, frcst, data) => {
+const ForecastDataTemp = (weekDay, frcst) => {
   const frcstPrecipChance = Math.round(frcst.pop * 100);
   const frcstTempMax = Math.round(frcst.main.temp_max);
   const frcstTempMin = Math.round(frcst.main.temp_min);
   const frcstWeatherDesc = frcst.weather[0].description;
 
-  const frcstHours = getHours(parseISO(data.dt_txt));
+  const frcstHours = getHours(parseISO(frcst.dt_txt));
   const frcstWeatherIconPath = getWeatherIconPath(frcstWeatherDesc, frcstHours);
 
   const tempSymbol = getTempSymbol(getLocalKey("crntMeasureUnit"));
@@ -207,7 +160,7 @@ const WeatherDOMTemp = () => {
         differenceInHours(timeNow, forecastTime) < 3
       ) {
         frcstToday = forecast;
-        const forecastData = ForecastDataTemp("Today", forecast, data);
+        const forecastData = ForecastDataTemp("Today", forecast);
         forecastDataWrapper.insertAdjacentHTML("beforeend", forecastData);
         break;
       }
@@ -223,12 +176,13 @@ const WeatherDOMTemp = () => {
       const forecast = data.list[i];
       const timeNow = toDate(Date.now());
       const forecastTime = parseISO(forecast.dt_txt);
+      console.log(forecastTime);
 
       const hourDifference = getHours(timeNow) - getHours(forecastTime);
       weekDay = parseWeekDayName(getDay(forecastTime));
 
       if (!isToday(forecastTime) && hourDifference <= 3 && hourDifference > 0) {
-        const forecastData = ForecastDataTemp(weekDay, forecast, data);
+        const forecastData = ForecastDataTemp(weekDay, forecast);
         forecastDataWrapper.insertAdjacentHTML("beforeend", forecastData);
       }
     }
