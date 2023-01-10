@@ -1,39 +1,109 @@
 /* eslint-disable linebreak-style */
 import {
+  format,
+  parseISO,
+  getHours,
+  getDay,
   isToday,
   toDate,
   secondsToMilliseconds,
-  getHours,
   differenceInHours,
-  getDay,
-  format,
-  parseISO,
 } from "date-fns";
 
+import { displayErrorAlert } from "./helpers/dom-helpers";
+
 import {
-  CreateForecastData,
-  deleteLocalKey,
-  displayErrorAlert,
-  getWeatherIconPath,
   parseDegDrctn,
   parseWeekDayName,
-} from "./helpers";
+  deleteLocalKey,
+  storeToLocal,
+  getLocalKey,
+  getTempSymbol,
+  convSpeedSymbol,
+} from "./helpers/data-helpers";
 
-const Weather = (() => {
-  const forecastDataWrpr = document.querySelector(
+import clearDayIcon from "../assets/svgs/clear-sky-day-icon.svg";
+import clearNightIcon from "../assets/svgs/clear-sky-night-icon.svg";
+
+import fewCloudsDayIcon from "../assets/svgs/few-clouds-day-icon.svg";
+import fewCloudsNightIcon from "../assets/svgs/few-clouds-night-icon.svg";
+
+import scatteredCloudsIcon from "../assets/svgs/scattered-clouds-icon.svg";
+import brokenCloudsIcon from "../assets/svgs/broken-clouds-icon.svg";
+
+import showerRainDayIcon from "../assets/svgs/shower-rain-day-icon.svg";
+import showerRainNightIcon from "../assets/svgs/shower-rain-night-icon.svg";
+
+import rainIcon from "../assets/svgs/rain-icon.svg";
+import snowIcon from "../assets/svgs/snow-icon.svg";
+
+import thunderstormIcon from "../assets/svgs/thunderstorm-icon.svg";
+import windCloudIcon from "../assets/svgs/wind-cloud-icon.svg";
+
+const getWeatherIconPath = (string, hours) => {
+  let iconPath = "";
+
+  if (/clear sky/i.test(string)) {
+    iconPath = hours > 17 ? clearNightIcon : clearDayIcon;
+  } else if (
+    /mist/i.test(string) ||
+    /fog/i.test(string) ||
+    /smoke/i.test(string) ||
+    /haze/i.test(string) ||
+    /sand/i.test(string) ||
+    /dust/i.test(string) ||
+    /ash/i.test(string) ||
+    /squall/i.test(string) ||
+    /tornado/i.test(string)
+  ) {
+    iconPath = windCloudIcon;
+  } else if (/few clouds/i.test(string)) {
+    iconPath = hours > 17 ? fewCloudsNightIcon : fewCloudsDayIcon;
+  } else if (/scattered clouds/i.test(string)) iconPath = scatteredCloudsIcon;
+  else if (/broken clouds/i.test(string) || /overcast clouds/i.test(string)) {
+    iconPath = brokenCloudsIcon;
+  } else if (/thunderstorm/i.test(string)) iconPath = thunderstormIcon;
+  else if (/snow/i.test(string) || /sleet/.test(string)) iconPath = snowIcon;
+  else if (/shower rain/i.test(string) || /drizzle/.test(string)) {
+    iconPath = hours > 17 ? showerRainNightIcon : showerRainDayIcon;
+  } else if (/rain/i.test(string)) iconPath = rainIcon;
+
+  return iconPath;
+};
+
+const ForecastDataTemp = (weekDay, frcst, data) => {
+  const frcstPrecipChance = Math.round(frcst.pop * 100);
+  const frcstTempMax = Math.round(frcst.main.temp_max);
+  const frcstTempMin = Math.round(frcst.main.temp_min);
+  const frcstWeatherDesc = frcst.weather[0].description;
+
+  const frcstHours = getHours(parseISO(data.dt_txt));
+  const frcstWeatherIconPath = getWeatherIconPath(frcstWeatherDesc, frcstHours);
+
+  const tempSymbol = getTempSymbol(getLocalKey("crntMeasureUnit"));
+
+  const frcstData = `<div class="forecastData">
+    <div class="forecastData-day">
+        <span><strong>${weekDay}</strong></span>
+    </div>
+    <object class="forecastData-weather" aria-label="${frcstWeatherDesc}"
+        data="${frcstWeatherIconPath}" type="text/svg+xml" tabindex="-1">
+        Weather for ${weekDay} is ${frcstWeatherDesc}</object>
+    <div class="forecastData-precipitation">
+        <span>${frcstPrecipChance}%</span>
+    </div>
+    <div class="forecastData-maxMinTemp">
+        <span>${frcstTempMax}${tempSymbol} / ${frcstTempMin}${tempSymbol}</span>
+    </div>
+  </div>`;
+
+  return frcstData;
+};
+
+const WeatherDOMTemp = () => {
+  const forecastDataWrapper = document.querySelector(
     "[data-slctr=forecastDataWrapper]"
   );
-
-  const Geo = navigator.geolocation ? navigator.geolocation : false;
-
-  const setLastUpdate = () => {
-    const lastUpdatedLabel = document.querySelector(
-      "[data-slctr=lastUpdatedLabel]"
-    );
-
-    const timeNow = format(toDate(Date.now()), "p");
-    lastUpdatedLabel.textContent = `Last updated ${timeNow.toLowerCase()}`;
-  };
 
   const setTempLabels = (frcst) => {
     const mainTempLabel = document.querySelector("[data-slctr=mainTempLabel]");
@@ -43,10 +113,21 @@ const Weather = (() => {
       "[data-slctr=feelsTempLabel]"
     );
 
-    mainTempLabel.textContent = `${Math.floor(frcst.main.temp)}°C`;
-    maxTempLabel.textContent = `${Math.floor(frcst.main.temp_max)}°C`;
-    minTempLabel.textContent = `${Math.floor(frcst.main.temp_min)}°C`;
-    feelsTempLabel.textContent = `${Math.floor(frcst.main.feels_like)}°C`;
+    const tempSymbol = getTempSymbol(getLocalKey("crntMeasureUnit"));
+
+    mainTempLabel.textContent = `${Math.floor(frcst.main.temp)}${tempSymbol}`;
+
+    maxTempLabel.textContent = `${Math.floor(
+      frcst.main.temp_max
+    )}${tempSymbol}`;
+
+    minTempLabel.textContent = `${Math.floor(
+      frcst.main.temp_min
+    )}${tempSymbol}`;
+
+    feelsTempLabel.textContent = `${Math.floor(
+      frcst.main.feels_like
+    )}${tempSymbol}`;
   };
 
   const setWeather = (frcst) => {
@@ -77,10 +158,11 @@ const Weather = (() => {
     const windDirLabel = document.querySelector("[data-slctr=windDirLabel]");
 
     const hasRainProp = Object.prototype.hasOwnProperty.call(frcst, "rain");
+    const speedSymbol = convSpeedSymbol(getLocalKey("crntMeasureUnit"));
 
     rainVolLabel.textContent = `${hasRainProp ? frcst.rain["3h"] : 0} mm`;
     humidityLabel.textContent = `${frcst.main.humidity}%`;
-    windSpeedLabel.textContent = `${frcst.wind.speed} m/s`;
+    windSpeedLabel.textContent = `${frcst.wind.speed} ${speedSymbol}`;
     windDirLabel.textContent = `${parseDegDrctn(frcst.wind.deg)}`;
   };
 
@@ -111,6 +193,8 @@ const Weather = (() => {
   };
 
   const forecastToday = (data) => {
+    forecastDataWrapper.innerHTML = "";
+
     let frcstToday;
 
     for (let i = 0; i < data.list.length; i += 1) {
@@ -123,8 +207,8 @@ const Weather = (() => {
         differenceInHours(timeNow, forecastTime) < 3
       ) {
         frcstToday = forecast;
-        const forecastData = CreateForecastData("Today", forecast, data);
-        forecastDataWrpr.insertAdjacentHTML("beforeend", forecastData);
+        const forecastData = ForecastDataTemp("Today", forecast, data);
+        forecastDataWrapper.insertAdjacentHTML("beforeend", forecastData);
         break;
       }
     }
@@ -144,13 +228,37 @@ const Weather = (() => {
       weekDay = parseWeekDayName(getDay(forecastTime));
 
       if (!isToday(forecastTime) && hourDifference <= 3 && hourDifference > 0) {
-        const forecastData = CreateForecastData(weekDay, forecast, data);
-        forecastDataWrpr.insertAdjacentHTML("beforeend", forecastData);
+        const forecastData = ForecastDataTemp(weekDay, forecast, data);
+        forecastDataWrapper.insertAdjacentHTML("beforeend", forecastData);
       }
     }
   };
 
-  const getWeather = async (latitude, longitude, errorFunc) => {
+  const setLastUpdate = () => {
+    const lastUpdatedLabel = document.querySelector(
+      "[data-slctr=lastUpdatedLabel]"
+    );
+
+    const timeNow = format(toDate(Date.now()), "p");
+    lastUpdatedLabel.textContent = `Last updated ${timeNow.toLowerCase()}`;
+  };
+
+  return {
+    forecastToday,
+    forecastNextFourDays,
+    setLastUpdate,
+  };
+};
+
+const Weather = (() => {
+  const DOM = WeatherDOMTemp();
+  const Geo = navigator.geolocation ? navigator.geolocation : false;
+
+  const getWeather = async (latitude, longitude, errorFunc, unit) => {
+    storeToLocal("crntLat", latitude);
+    storeToLocal("crntLong", longitude);
+    storeToLocal("crntMeasureUnit", unit);
+
     let targetData;
     let data;
     try {
@@ -162,10 +270,9 @@ const Weather = (() => {
       return;
     }
 
-    forecastDataWrpr.innerHTML = "";
-    forecastToday(data);
-    forecastNextFourDays(data);
-    setLastUpdate();
+    DOM.forecastToday(data);
+    DOM.forecastNextFourDays(data);
+    DOM.setLastUpdate();
   };
 
   const getLatAndLong = async (pos) => {
@@ -174,7 +281,12 @@ const Weather = (() => {
     const latPos = pos.coords.latitude;
     const longPos = pos.coords.longitude;
 
-    getWeather(latPos, longPos, displayErrorAlert);
+    getWeather(
+      latPos,
+      longPos,
+      displayErrorAlert,
+      getLocalKey("crntMeasureUnit")
+    );
   };
 
   const getLocation = async (input, errorFunc) => {
@@ -191,14 +303,12 @@ const Weather = (() => {
     Geo.getCurrentPosition(getLatAndLong, errorFunc, { timeout: 10000 });
   };
 
-  const obj = {
+  return {
     getPosition,
     getWeather,
     getLocation,
     Geo,
   };
-
-  return obj;
 })();
 
 export default Weather;

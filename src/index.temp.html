@@ -29,19 +29,35 @@
                 <object class="settingsIcon" aria-label="settingsIcon" data="assets/svgs/settings-icon.svg"
                     type="text/svg+xml" tabindex="-1">Settings Button</object>
             </button>
+            <div class="dropdown dropdown--settings elem-hide" data-slctr="settingsDrpdwn">
+                <button class="dropdown-closeBtn" data-slctr="closeSettingsDrpdwnBtn"><object class="icon"
+                        aria-label="Close settings dropdown." data="assets/svgs/close-drpdwn-icon.svg"
+                        type="text/svg+xml" tabindex="-1">X-mark
+                        icon.</object></button>
+                <div class="convertTemp">
+                    <button class="convertTemp-celsius" data-is-celsius="true" data-slctr="convertToCBtn">C°<div
+                            class="signal signal-isActivated">
+                        </div></button>
+                    <button class="convertTemp-fahrenheit" data-is-fahrenheit="" data-slctr="convertToFBtn">F°<div
+                            class="signal"></div></button>
+                </div>
+                <a class="dropdown-btn" href="https://github.com/keanedalisay/panahon"><object class="icon"
+                        aria-label="Project link to Github repo." data="assets/svgs/github-icon.svg" type="text/svg+xml"
+                        tabindex="-1">Github logo.</object>Github</a>
+            </div>
         </section>
         <section class="mainWeatherPanel">
             <div class="mainWeather">
                 <div class="mainWeather-temp">
-                    <span class="tempNow" data-slctr="mainTempLabel">0°C</span>
-                    <span class="weatherLocation" data-slctr="weatherLocLabel">No Location.</span>
+                    <span class="tempNow" data-slctr="mainTempLabel">0</span>
+                    <span class="weatherLocation" data-slctr="weatherLocLabel">No Location</span>
                 </div>
                 <object class="mainWeather-icon" aria-label="sunnyWeather" data="assets/svgs/clear-sky-day-icon.svg"
-                    type="text/svg+xml" tabindex="-1" data-slctr="mainWeather">No weather data to retrieve.</object>
+                    type="text/svg+xml" tabindex="-1" data-slctr="mainWeather">No weather data to retrieve</object>
             </div>
             <div class="extraTemp" data-slctr="extraTempPanel">
                 <span class="extraTemp-maxMin">
-                    <strong data-slctr="maxTempLabel">0°C</strong> / <strong data-slctr="minTempLabel">0°C</strong>
+                    <strong data-slctr="maxTempLabel">0</strong> / <strong data-slctr="minTempLabel">0</strong>
                 </span>
                 <span class="extraTemp-feelsLike">Feels like <strong data-slctr="feelsTempLabel">nothing</strong></span>
             </div>
@@ -52,11 +68,11 @@
                 <div class="dummyWeatherIcon"></div>
                 <object class="weatherElem-precipitation"
                     aria-label="Precipitation chance for the coming days, expressed in percentage."
-                    data="assets/svgs/rain-icon.svg" type="text/svg+xml" tabindex="-1">Precipitation Chance.</object>
+                    data="assets/svgs/rain-icon.svg" type="text/svg+xml" tabindex="-1">Precipitation Chance</object>
                 <object class="weatherElem-maxMinTemp"
                     aria-label="Max and Minimum temperature for the coming days, expressed in either Celsius or Fahrenheit"
                     data="assets/svgs/temperature-icon.svg" type="text/svg+xml" tabindex="-1">Max and Min
-                    Temperature.</object>
+                    Temperature</object>
             </div>
             <div class="forecastDataWrapper" data-slctr="forecastDataWrapper">
 
@@ -67,7 +83,7 @@
                 <object class="rainVolume-icon" aria-label="Rain Volume icon" data="assets/svgs/rain-drop-icon.svg"
                     type="text/svg+xml" tabindex="-1">Rain Volume</object>
                 <div class="rainVolume-data">
-                    <span><strong data-slctr="rainVolLabel">0 mm</strong></span>
+                    <span><strong data-slctr="rainVolLabel">0</strong></span>
                 </div>
                 <div class="rainVolume-detail">
                     <span>Rain volume last 3 hours</span>
@@ -87,7 +103,7 @@
                 <object class="wind-icon" aria-label="Wind icon" data="assets/svgs/wind-blow-icon.svg"
                     type="text/svg+xml" tabindex="-1">Wind</object>
                 <div class="wind-speed">
-                    <span><strong data-slctr="windSpeedLabel">0 m/s</strong></span>
+                    <span><strong data-slctr="windSpeedLabel">0</strong></span>
                 </div>
                 <div class="wind-direction">
                     <span><strong data-slctr="windDirLabel">N/A</strong></span>
@@ -101,7 +117,7 @@
             <div class="sunrise">
                 <object class="sunrise-icon" aria-label="A sun icon rising with bright yellow glares."
                     data="assets/svgs/sunrise-icon.svg" type="text/svg+xml" tabindex="-1">A sun icon rising with bright
-                    yellow glares.</object>
+                    yellow glares</object>
                 <div class="sunrise-time">
                     <span><strong data-slctr="sunriseTimeLabel">0:00</strong></span>
                 </div>
@@ -112,7 +128,7 @@
             <div class="sunset">
                 <object class="sunset-icon" aria-label="A sun icon setting, leaving a mix of red and orange glare."
                     data="assets/svgs/sunset-icon.svg" type="text/svg+xml" tabindex="-1">A sun icon setting, leaving a
-                    mix of red and orange glare.</object>
+                    mix of red and orange glare</object>
                 <div class="sunset-time">
                     <span><strong data-slctr="sunsetTimeLabel">0:00</strong></span>
                 </div>
