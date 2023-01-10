@@ -1,7 +1,7 @@
 /* eslint-disable linebreak-style */
 
 import Anim from "./anim";
-import Weather from "./weather";
+import Weather from "./weather/weather";
 
 import {
   delegateEvent,
@@ -226,7 +226,15 @@ const App = (() => {
   };
 
   const displayPositionError = (error) => {
-    if (getLocalKey("geoLocErr")) return;
+    if (getLocalKey("geoLocErr")) {
+      Weather.getWeather(
+        getLocalKey("crntLat"),
+        getLocalKey("crntLong"),
+        displayErrorAlert,
+        getLocalKey("crntMeasureUnit")
+      );
+      return;
+    }
 
     const positionError = { code: error.code, message: error.message };
     storeToLocal("geoLocErr", JSON.stringify(positionError));
@@ -269,13 +277,6 @@ const App = (() => {
     Anim.init();
     Settings.init();
     App.checkGeoLocAPI();
-
-    Weather.getWeather(
-      getLocalKey("crntLat"),
-      getLocalKey("crntLong"),
-      displayErrorAlert,
-      getLocalKey("crntMeasureUnit")
-    );
 
     closeAlertBtn.addEventListener("click", () => {
       toggleAlertPanel();
