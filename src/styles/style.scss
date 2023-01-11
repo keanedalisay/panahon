@@ -540,3 +540,45 @@ object {
 .elem-hide {
   display: none;
 }
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+  font-family: "Rubik", Arial, Helvetica, sans-serif;
+  color: var(--mine-shaft);
+}
+
+.leaflet-control-layers {
+  padding: 0.5rem 1rem;
+}
+.leaflet-control-layers-scrollbar {
+  padding: 0;
+  overflow: hidden;
+}
+
+.leaflet-control-layers-base {
+  label:hover,
+  label:focus {
+    background: var(--seashell);
+  }
+}
+
+.leaflet-control-layers-selector {
+  position: absolute;
+  opacity: 0;
+  z-index: -1;
+}
+.leaflet-control-layers-selector ~ span {
+  margin: 0.25rem 0;
+  padding: 0 0.5rem;
+  height: 1.5rem;
+  @include flexCenter;
+  border-radius: 0.1rem;
+  font-family: "Rubik", Arial, Helvetica, sans-serif;
+  color: var(--mine-shaft);
+}
+.leaflet-control-layers-selector:checked ~ span {
+  background: var(--seashell);
+}
+.leaflet-control-layers-selector:focus ~ span {
+  background: var(--alto);
+}

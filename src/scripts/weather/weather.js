@@ -22,6 +22,7 @@ import {
   convSpeedSymbol,
 } from "../helpers/data-helpers";
 
+import Radar from "./weather-radar";
 import getWeatherIconPath from "./weather-icon";
 
 const ForecastDataTemp = (weekDay, frcst) => {
@@ -176,7 +177,6 @@ const WeatherDOMTemp = () => {
       const forecast = data.list[i];
       const timeNow = toDate(Date.now());
       const forecastTime = parseISO(forecast.dt_txt);
-      console.log(forecastTime);
 
       const hourDifference = getHours(timeNow) - getHours(forecastTime);
       weekDay = parseWeekDayName(getDay(forecastTime));
@@ -224,6 +224,7 @@ const Weather = (() => {
       return;
     }
 
+    Radar.flyTo([latitude, longitude], 8);
     DOM.forecastToday(data);
     DOM.forecastNextFourDays(data);
     DOM.setLastUpdate();
