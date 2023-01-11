@@ -503,20 +503,15 @@ object {
 .weatherRadarPanel {
   margin-top: 3rem;
   padding: 1rem 0;
-  @include widthAndHeight(min(100%, 55rem), auto);
+  @include widthAndHeight(min(100%, 55rem), clamp(32rem, 80vw, 55rem));
   background: transparent;
   border-radius: 1rem;
   @include flexCenter;
   transition: background ease-in-out 275ms;
 
   .weatherRadar {
-    @include flexCenter;
+    @include widthAndHeight(90%, 90%);
   }
-}
-.weatherRadar-img {
-  width: 90%;
-  height: 30rem;
-  object-fit: cover;
 }
 
 .footer {
