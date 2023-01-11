@@ -541,14 +541,19 @@ object {
   display: none;
 }
 
+.leaflet-container {
+  z-index: 0;
+}
 .leaflet-control-zoom-in,
 .leaflet-control-zoom-out {
   font-family: "Rubik", Arial, Helvetica, sans-serif;
   color: var(--mine-shaft);
+  z-index: 0;
 }
 
 .leaflet-control-layers {
   padding: 0.5rem 1rem;
+  z-index: 0;
 }
 .leaflet-control-layers-scrollbar {
   padding: 0;
@@ -581,4 +586,8 @@ object {
 }
 .leaflet-control-layers-selector:focus ~ span {
   background: var(--alto);
+}
+
+.leaflet-control-attribution {
+  z-index: 0;
 }
