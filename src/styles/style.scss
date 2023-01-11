@@ -513,6 +513,13 @@ object {
     @include widthAndHeight(90%, 90%);
   }
 }
+.weatherRadarPanel-fullscreen {
+  @include widthAndHeight(100vw, 100%);
+  position: fixed;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 
 .footer {
   margin-top: 2rem;
@@ -549,6 +556,19 @@ object {
   font-family: "Rubik", Arial, Helvetica, sans-serif;
   color: var(--mine-shaft);
   z-index: 0;
+}
+
+.leaflet-control-fullscreen {
+  @include widthAndHeight(3.4rem, 3.4rem);
+  @include flexCenter;
+  background: var(--white);
+}
+.leaflet-control-fullscreen:hover,
+.leaflet-control-fullscreen:focus {
+  background: var(--seashell);
+}
+.leaflet-control-fullscreen-icon {
+  width: 1.5rem;
 }
 
 .leaflet-control-layers {
