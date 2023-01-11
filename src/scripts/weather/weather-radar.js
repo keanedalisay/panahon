@@ -1,5 +1,7 @@
 import fullscreenIcon from "../../assets/svgs/fullscreen-icon.svg";
+
 import { getLocalKey } from "../helpers/data-helpers";
+import { toggleOverlay } from "../helpers/dom-helpers";
 
 const crntLat = parseInt(getLocalKey("crntLat"), 10) || 0;
 const crntLong = parseInt(getLocalKey("crntLong"), 10) || 0;
@@ -29,6 +31,9 @@ const openStreetMap = L.tileLayer(
   }
 );
 
+const weatherRadarPanel = document.querySelector(
+  "[data-slctr=weatherRadarPanel]"
+);
 const radarElem = document.querySelector("[data-slctr=weatherRadar]");
 
 const Radar = L.map(radarElem, {
@@ -43,39 +48,6 @@ setTimeout(() => {
   Radar.invalidateSize();
 }, 0);
 
-const FullscreenControl = L.Control.extend({
-  options: { position: "topleft" },
-  onAdd() {
-    const fullscreenBtn = L.DomUtil.create(
-      "button",
-      "leaflet-bar leaflet-control leaflet-control-fullscreen"
-    );
-    const object = document.createElement("object");
-    object.textContent = "Toggle fullscreen";
-    object.classList.add("leaflet-control-fullscreen-icon");
-    object.setAttribute("tabindex", -1);
-    object.setAttribute("aria-label", "Toggle fullscreen for map");
-    object.setAttribute("type", "text/svg+xml");
-    object.setAttribute("data", fullscreenIcon);
-
-    fullscreenBtn.appendChild(object);
-
-    fullscreenBtn.addEventListener("click", () => {
-      const weatherRadarPanel = document.querySelector(
-        "[data-slctr=weatherRadarPanel]"
-      );
-      weatherRadarPanel.classList.toggle("weatherRadarPanel-fullscreen");
-
-      setTimeout(() => {
-        Radar.invalidateSize();
-      }, 0);
-    });
-
-    return fullscreenBtn;
-  },
-});
-Radar.addControl(new FullscreenControl());
-
 const baseMaps = {
   Temperature: openWeatherMap.temp,
   Precipitation: openWeatherMap.precip,
@@ -88,5 +60,42 @@ L.control
     collapsed: false,
   })
   .addTo(Radar);
+
+const FullscreenControl = L.Control.extend({
+  options: { position: "topleft" },
+
+  onAdd() {
+    const fullscreenBtn = L.DomUtil.create(
+      "button",
+      "leaflet-bar leaflet-control leaflet-control-fullscreen"
+    );
+
+    const object = L.DomUtil.create(
+      "object",
+      "leaflet-control-fullscreen-icon"
+    );
+
+    object.textContent = "Toggle fullscreen";
+    object.setAttribute("tabindex", -1);
+    object.setAttribute("aria-label", "Toggle fullscreen for map");
+    object.setAttribute("type", "text/svg+xml");
+    object.setAttribute("data", fullscreenIcon);
+
+    fullscreenBtn.appendChild(object);
+
+    fullscreenBtn.addEventListener("click", () => {
+      weatherRadarPanel.classList.toggle("weatherRadarPanel-fullscreen");
+      toggleOverlay();
+
+      setTimeout(() => {
+        Radar.invalidateSize();
+      }, 0);
+    });
+
+    return fullscreenBtn;
+  },
+});
+
+Radar.addControl(new FullscreenControl());
 
 export default Radar;
