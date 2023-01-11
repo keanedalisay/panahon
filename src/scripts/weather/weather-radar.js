@@ -8,16 +8,16 @@ const crntLong = parseInt(getLocalKey("crntLong"), 10) || 0;
 
 const openWeatherMap = (() => {
   const temp = L.tileLayer(
-    `https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=99d30869fe44cfd63e80305f9176900b`
+    `https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=`
   );
   const precip = L.tileLayer(
-    `https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=99d30869fe44cfd63e80305f9176900b`
+    `https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=`
   );
   const clouds = L.tileLayer(
-    `https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=99d30869fe44cfd63e80305f9176900b`
+    `https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=`
   );
   const wind = L.tileLayer(
-    `https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=99d30869fe44cfd63e80305f9176900b`
+    `https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=`
   );
 
   return { temp, precip, clouds, wind };
@@ -86,10 +86,7 @@ const FullscreenControl = L.Control.extend({
     fullscreenBtn.addEventListener("click", () => {
       weatherRadarPanel.classList.toggle("weatherRadarPanel-fullscreen");
       toggleOverlay();
-
-      setTimeout(() => {
-        Radar.invalidateSize();
-      }, 0);
+      Radar.invalidateSize();
     });
 
     return fullscreenBtn;

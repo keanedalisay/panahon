@@ -594,11 +594,12 @@ object {
   z-index: -1;
 }
 .leaflet-control-layers-selector ~ span {
-  margin: 0.25rem 0;
+  margin: 0.4rem 0;
   padding: 0 0.5rem;
-  height: 1.5rem;
+  height: clamp(2rem, 3vw, 2.25rem);
   @include flexCenter;
-  border-radius: 0.1rem;
+  border-radius: 0.2rem;
+  font-size: clamp(1rem, 2vw, 1.2rem);
   font-family: "Rubik", Arial, Helvetica, sans-serif;
   color: var(--mine-shaft);
 }
