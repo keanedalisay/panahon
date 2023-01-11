@@ -9,6 +9,7 @@ import {
   displayErrorAlert,
   ShowElemTemp,
   HideElemTemp,
+  hideAlertPanel,
 } from "./helpers/dom-helpers";
 
 import {
@@ -283,7 +284,7 @@ const App = (() => {
     });
 
     overlay.addEventListener("click", () => {
-      toggleAlertPanel();
+      hideAlertPanel();
     });
 
     weatherLocInput.addEventListener("keyup", searchWeatherLocation);

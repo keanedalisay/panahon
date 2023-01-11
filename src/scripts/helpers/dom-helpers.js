@@ -17,7 +17,7 @@ export const delegateEvent = (parent, event, slctr, func) => {
   });
 };
 
-const toggleOverlay = () => {
+export const toggleOverlay = () => {
   const overlay = document.querySelector("[data-slctr=overlay]");
   overlay.classList.toggle("elem-hide");
 };
@@ -26,6 +26,12 @@ export const toggleAlertPanel = () => {
   toggleOverlay();
   const alertPanel = document.querySelector("[data-slctr=alertPanel]");
   alertPanel.classList.toggle("elem-hide");
+};
+
+export const hideAlertPanel = () => {
+  toggleOverlay();
+  const alertPanel = document.querySelector("[data-slctr=alertPanel]");
+  alertPanel.classList.add("elem-hide");
 };
 
 export const displayErrorAlert = (err) => {
