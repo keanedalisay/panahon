@@ -198,7 +198,7 @@ object {
 }
 
 .dropdown {
-  padding: 4.5rem 0 0.5rem 0;
+  padding: 0.5rem 0 0.5rem 0;
   @include flexCenterColumn;
   background: var(--white);
   z-index: 1;
@@ -209,24 +209,6 @@ object {
   position: absolute;
   top: 8rem;
   right: 2.5rem;
-
-  .dropdown-closeBtn {
-    @include widthAndHeight(3rem, 3rem);
-    @include flexCenter;
-    position: absolute;
-    top: 1rem;
-    left: 40%;
-    background: var(--white);
-    border-radius: 5rem;
-
-    .icon {
-      @include widthAndHeight(2rem, 2rem);
-    }
-  }
-  .dropdown-closeBtn:hover,
-  .dropdown-closeBtn:focus {
-    border: 0.1rem solid var(--mine-shaft);
-  }
 
   .convertTemp {
     @include widthAndHeight(100%, 3.5rem);
