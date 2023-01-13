@@ -1,27 +1,71 @@
 /* eslint-disable linebreak-style */
 
-import Anim from "./anim";
-import Weather from "./weather/weather";
-
-import {
-  delegateEvent,
-  toggleAlertPanel,
-  displayErrorAlert,
-  ShowElemTemp,
-  HideElemTemp,
-  hideAlertPanel,
-} from "./helpers/dom-helpers";
-
-import {
-  storeToLocal,
-  getLocalKey,
-  getCountryName,
-  crntTempIsFahrenheit,
-  crntTempIsCelsius,
-} from "./helpers/data-helpers";
-
 import commonStyle from "../styles/common.scss";
 import mainStyle from "../styles/style.scss";
+
+import Anim from "./anim";
+import Weather from "./weather";
+
+import {
+  getCountryName,
+  Local,
+  objHasProp,
+  Unit,
+} from "./helpers/data-helpers";
+import { delegateEvent, AlertPanel } from "./helpers/dom-helpers";
+
+const Settings = (() => {
+  const settingsBtn = document.querySelector("[data-slctr=settingsBtn]");
+  const settingsDrpdwn = document.querySelector("[data-slctr=settingsDrpdwn]");
+
+  const convertToCelsiusBtn = document.querySelector(
+    "[data-slctr=convertToCBtn]"
+  );
+  const convertToFahrenheitBtn = document.querySelector(
+    "[data-slctr=convertToFBtn]"
+  );
+
+  const celsiusSignal = convertToCelsiusBtn.querySelector(".signal");
+  const fahrenheitSignal = convertToFahrenheitBtn.querySelector(".signal");
+
+  const toggleDropdown = () => settingsDrpdwn.classList.toggle("elem-hide");
+
+  const convertToCelsius = () => {
+    if (Unit.isMetric()) return;
+
+    Local.update("unit", { unit: "metric" });
+
+    celsiusSignal.classList.add("signal-isActivated");
+    fahrenheitSignal.classList.remove("signal-isActivated");
+
+    const lattitude = Local.getValue("latitude") || 0;
+    const longitude = Local.getValue("longitude") || 0;
+
+    Weather.getWeather(lattitude, longitude);
+  };
+
+  const convertToFahrenheit = () => {
+    if (!Unit.isMetric()) return;
+
+    Local.update("unit", { unit: "imperial" });
+
+    celsiusSignal.classList.remove("signal-isActivated");
+    fahrenheitSignal.classList.add("signal-isActivated");
+
+    const latitude = Local.getValue("latitude") || 0;
+    const longitude = Local.getValue("longitude") || 0;
+
+    Weather.getWeather(latitude, longitude);
+  };
+
+  const init = () => {
+    settingsBtn.addEventListener("click", toggleDropdown);
+    convertToCelsiusBtn.addEventListener("click", convertToCelsius);
+    convertToFahrenheitBtn.addEventListener("click", convertToFahrenheit);
+  };
+
+  return { init };
+})();
 
 const LocationAutocmplt = (() => {
   const weatherLocInput = document.querySelector(
@@ -44,7 +88,7 @@ const LocationAutocmplt = (() => {
 
   const autocmpltVal = (name, coords) => {
     const locAutocmpltValue = `<button class="autocmplt-value" 
-          data-loclat="${coords.lat}" data-loclong="${coords.lon}">
+          data-lat="${coords.lat}" data-long="${coords.lon}">
           ${name}</button>`;
     weatherLocAutocmplt.insertAdjacentHTML("beforeend", locAutocmpltValue);
   };
@@ -56,124 +100,20 @@ const LocationAutocmplt = (() => {
     weatherLocAutocmplt.insertAdjacentHTML("beforeend", locNotFound);
   };
 
-  const add = { autocmpltVal, autocmpltAlert };
+  const autocmpltValWeather = (e) => {
+    const targetAutocmpltVal = e.target;
+    const latitude = targetAutocmpltVal.dataset.lat;
+    const longitude = targetAutocmpltVal.dataset.long;
 
-  return { show, hide, add };
-})();
-
-const Settings = (() => {
-  const settingsBtn = document.querySelector("[data-slctr=settingsBtn]");
-  const settingsDrpdwn = document.querySelector("[data-slctr=settingsDrpdwn]");
-  const closeSettingsBtn = document.querySelector(
-    "[data-slctr=closeSettingsDrpdwnBtn]"
-  );
-
-  const convertToCelsiusBtn = document.querySelector(
-    "[data-slctr=convertToCBtn]"
-  );
-  const convertToFahrenheitBtn = document.querySelector(
-    "[data-slctr=convertToFBtn]"
-  );
-
-  const celsiusSignal = convertToCelsiusBtn.querySelector(".signal");
-  const fahrenheitSignal = convertToFahrenheitBtn.querySelector(".signal");
-
-  const showDropdown = ShowElemTemp(settingsDrpdwn);
-  const hideDropdown = HideElemTemp(settingsDrpdwn);
-
-  const convertToCelsius = () => {
-    if (crntTempIsCelsius()) return;
-
-    celsiusSignal.classList.add("signal-isActivated");
-    fahrenheitSignal.classList.remove("signal-isActivated");
-
-    convertToCelsiusBtn.dataset.isCelsius = "true";
-    convertToFahrenheitBtn.dataset.isFahrenheit = "";
-
-    const crntLat = getLocalKey("crntLat");
-    const crntLong = getLocalKey("crntLong");
-
-    Weather.getWeather(crntLat, crntLong, displayErrorAlert, "metric");
+    LocationAutocmplt.hide();
+    Weather.getWeather(latitude, longitude);
   };
 
-  const convertToFahrenheit = () => {
-    if (crntTempIsFahrenheit()) return;
-
-    celsiusSignal.classList.remove("signal-isActivated");
-    fahrenheitSignal.classList.add("signal-isActivated");
-
-    convertToCelsiusBtn.dataset.isCelsius = "";
-    convertToFahrenheitBtn.dataset.isFahrenheit = "true";
-
-    const crntLat = getLocalKey("crntLat");
-    const crntLong = getLocalKey("crntLong");
-
-    Weather.getWeather(crntLat, crntLong, displayErrorAlert, "imperial");
-  };
-
-  const setMeasureSignal = () => {
-    if (getLocalKey("crntMeasureUnit") === "imperial") {
-      celsiusSignal.classList.remove("signal-isActivated");
-      fahrenheitSignal.classList.add("signal-isActivated");
-
-      convertToCelsiusBtn.dataset.isCelsius = "";
-      convertToFahrenheitBtn.dataset.isFahrenheit = "true";
-      return;
-    }
-
-    celsiusSignal.classList.add("signal-isActivated");
-    fahrenheitSignal.classList.remove("signal-isActivated");
-
-    convertToCelsiusBtn.dataset.isCelsius = "true";
-    convertToFahrenheitBtn.dataset.isFahrenheit = "";
-  };
-
-  const init = () => {
-    if (!getLocalKey("crntMeasureUnit"))
-      storeToLocal("crntMeasureUnit", "metric");
-
-    setMeasureSignal();
-
-    settingsBtn.addEventListener("click", showDropdown);
-    closeSettingsBtn.addEventListener("click", hideDropdown);
-    convertToCelsiusBtn.addEventListener("click", convertToCelsius);
-    convertToFahrenheitBtn.addEventListener("click", convertToFahrenheit);
-  };
-
-  return { init };
-})();
-
-const App = (() => {
-  const overlay = document.querySelector("[data-slctr=overlay]");
-
-  const alertHeading = document.querySelector("[data-slctr=alertHeading]");
-  const alertDetail = document.querySelector("[data-slctr=alertDetail]");
-  const closeAlertBtn = document.querySelector("[data-slctr=closeAlertBtn]");
-
-  const weatherLocInput = document.querySelector(
-    "[data-slctr=weatherLocInput]"
-  );
-  const weatherLocAutocmplt = document.querySelector(
-    "[data-slctr=weatherLocAutocmplt]"
-  );
-
-  const searchWeatherLocation = async (e) => {
+  const weatherLocation = async (e) => {
     if (!e.target.value || e.key !== "Enter") return;
 
     const locationInput = e.target.value;
-    const locations = await Weather.getLocation(
-      locationInput,
-      displayErrorAlert
-    );
-
-    const locationErr = Object.prototype.hasOwnProperty.call(locations, "cod");
-    if (locationErr) {
-      toggleAlertPanel();
-      alertHeading.textContent = locations.cod;
-      alertDetail.textContent = locations.message;
-
-      return;
-    }
+    const locations = await Weather.getLocation(locationInput);
 
     if (locations.length === 0) {
       LocationAutocmplt.show();
@@ -181,17 +121,11 @@ const App = (() => {
       return;
     }
     if (locations.length === 1) {
-      const fstLocLat = locations[0].lat;
-      const fstLocLong = locations[0].lon;
+      const firstLatitude = locations[0].lat;
+      const firstLongitude = locations[0].lon;
 
       LocationAutocmplt.hide();
-
-      Weather.getWeather(
-        fstLocLat,
-        fstLocLong,
-        displayErrorAlert,
-        getLocalKey("crntMeasureUnit")
-      );
+      Weather.getWeather(firstLatitude, firstLongitude);
       return;
     }
 
@@ -200,104 +134,86 @@ const App = (() => {
       let locationName = `${location.name}, ${getCountryName(
         location.country
       )}`;
-
-      const hasStateProp = Object.prototype.hasOwnProperty.call(
-        location,
-        "state"
-      );
-      if (hasStateProp) locationName += `, ${location.state}`;
+      if (objHasProp(location, "state")) locationName += `, ${location.state}`;
 
       LocationAutocmplt.add.autocmpltVal(locationName, location);
     });
   };
 
-  const getLocValLatAndLong = (e) => {
-    const locAutocmpltVal = e.target;
-    const locLat = locAutocmpltVal.dataset.loclat;
-    const locLong = locAutocmpltVal.dataset.loclong;
+  const add = { autocmpltVal, autocmpltAlert };
 
-    LocationAutocmplt.hide();
+  const init = () => {
+    weatherLocInput.addEventListener("keyup", weatherLocation);
+    weatherLocInput.addEventListener("input", hide);
 
-    Weather.getWeather(
-      locLat,
-      locLong,
-      displayErrorAlert,
-      getLocalKey("crntMeasureUnit")
+    delegateEvent(
+      weatherLocAutocmplt,
+      "click",
+      ".autocmplt-value",
+      autocmpltValWeather
     );
   };
 
-  const displayPositionError = (error) => {
-    if (getLocalKey("geoLocErr")) {
+  return { show, hide, add, init };
+})();
+
+const App = (() => {
+  const showPositionError = (error) => {
+    if (Local.hasKey("geolocationError")) {
       Weather.getWeather(
-        getLocalKey("crntLat"),
-        getLocalKey("crntLong"),
-        displayErrorAlert,
-        getLocalKey("crntMeasureUnit")
+        Local.getValue("latitude") || 0,
+        Local.getValue("longitude") || 0,
+        Local.getValue("unit") || "metric"
       );
       return;
     }
 
     const positionError = { code: error.code, message: error.message };
-    storeToLocal("geoLocErr", JSON.stringify(positionError));
+    Local.create("geolocationError", JSON.stringify(positionError));
+
+    const err = {
+      message: "To retrieve weather data, use the search bar instead",
+    };
 
     switch (error.code) {
       case 2:
-        alertHeading.textContent =
-          "Geolocation API is unable to access your location...";
+        err.name = "Geolocation API is unable to access your location...";
         break;
       case 3:
-        alertHeading.textContent =
-          "Geolocation API took too long to respond...";
+        err.name = "Geolocation API took too long to respond...";
         break;
       default:
-        alertHeading.textContent =
-          "Call to retrieve your location has been rejected...";
+        err.name = "Call to retrieve your location has been rejected...";
         break;
     }
 
-    alertDetail.textContent =
-      "To retrieve weather data, use the search bar instead.";
-    toggleAlertPanel();
+    AlertPanel.showCustomError(err);
   };
 
-  const checkGeoLocAPI = () => {
+  const checkGeolocationAPI = () => {
     if (!Weather.Geo) {
-      alertHeading.textContent =
-        "Geolocation API is not supported in your browser version...";
-      alertDetail.textContent =
-        "Use the search bar instead to retrieve weather data.";
-
-      toggleAlertPanel();
+      const err = {
+        name: "Geolocation API is not supported in your browser version...",
+        message: "Use the search bar instead to retrieve weather data.",
+      };
+      AlertPanel.showCustomError(err);
       return;
     }
-
-    Weather.getPosition(displayPositionError);
+    Weather.getPosition(showPositionError);
   };
 
   const init = () => {
-    Anim.init();
+    LocationAutocmplt.init();
     Settings.init();
-    App.checkGeoLocAPI();
+    checkGeolocationAPI();
+    Anim.init();
 
-    closeAlertBtn.addEventListener("click", () => {
-      toggleAlertPanel();
-    });
-
-    overlay.addEventListener("click", () => {
-      hideAlertPanel();
-    });
-
-    weatherLocInput.addEventListener("keyup", searchWeatherLocation);
-    weatherLocInput.addEventListener("input", LocationAutocmplt.hide);
-    delegateEvent(
-      weatherLocAutocmplt,
-      "click",
-      ".autocmplt-value",
-      getLocValLatAndLong
+    window.addEventListener("unhandledrejection", (e) =>
+      AlertPanel.showError(e.reason)
     );
   };
 
-  return { init, checkGeoLocAPI };
+  return { init };
 })();
 
 App.init();

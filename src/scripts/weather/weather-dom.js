@@ -1,64 +1,54 @@
-/* eslint-disable linebreak-style */
-import {
-  format,
-  parseISO,
-  getHours,
-  getDay,
-  isToday,
-  toDate,
-  secondsToMilliseconds,
-  differenceInHours,
-} from "date-fns";
+import getHours from "date-fns/getHours";
+import getDay from "date-fns/getDay";
 
-import { displayErrorAlert } from "../helpers/dom-helpers";
+import isToday from "date-fns/isToday";
+import differenceInHours from "date-fns/differenceInHours";
+import secondsToMilliseconds from "date-fns/secondsToMilliseconds";
+import toDate from "date-fns/toDate";
 
-import {
-  parseDegDrctn,
-  parseWeekDayName,
-  deleteLocalKey,
-  storeToLocal,
-  getLocalKey,
-  getTempSymbol,
-  convSpeedSymbol,
-} from "../helpers/data-helpers";
+import format from "date-fns/format";
+import parseISO from "date-fns/parseISO";
 
-import Radar from "./weather-radar";
 import getWeatherIconPath from "./weather-icon";
 
+import {
+  Unit,
+  Local,
+  getWeekDayName,
+  getDegreeDrctn,
+} from "../helpers/data-helpers";
+
 const ForecastDataTemp = (weekDay, frcst) => {
-  const frcstPrecipChance = Math.round(frcst.pop * 100);
   const frcstTempMax = Math.round(frcst.main.temp_max);
   const frcstTempMin = Math.round(frcst.main.temp_min);
+  const frcstPrecipChance = Math.round(frcst.pop * 100);
+
   const frcstWeatherDesc = frcst.weather[0].description;
 
   const frcstHours = getHours(parseISO(frcst.dt_txt));
   const frcstWeatherIconPath = getWeatherIconPath(frcstWeatherDesc, frcstHours);
 
-  const tempSymbol = getTempSymbol(getLocalKey("crntMeasureUnit"));
+  const tempSymbol = Unit.getTempSymbol(Local.getValue("unit"));
 
   const frcstData = `<div class="forecastData">
-    <div class="forecastData-day">
-        <span><strong>${weekDay}</strong></span>
-    </div>
-    <object class="forecastData-weather" aria-label="${frcstWeatherDesc}"
-        data="${frcstWeatherIconPath}" type="text/svg+xml" tabindex="-1">
-        Weather for ${weekDay} is ${frcstWeatherDesc}</object>
-    <div class="forecastData-precipitation">
-        <span>${frcstPrecipChance}%</span>
-    </div>
-    <div class="forecastData-maxMinTemp">
-        <span>${frcstTempMax}${tempSymbol} / ${frcstTempMin}${tempSymbol}</span>
-    </div>
-  </div>`;
+      <div class="forecastData-day">
+          <span><strong>${weekDay}</strong></span>
+      </div>
+      <object class="forecastData-weather" aria-label="${frcstWeatherDesc}"
+          data="${frcstWeatherIconPath}" type="text/svg+xml" tabindex="-1">
+          Weather for ${weekDay} is ${frcstWeatherDesc}</object>
+      <div class="forecastData-precipitation">
+          <span>${frcstPrecipChance}%</span>
+      </div>
+      <div class="forecastData-maxMinTemp">
+          <span>${frcstTempMax}${tempSymbol} / ${frcstTempMin}${tempSymbol}</span>
+      </div>
+    </div>`;
 
   return frcstData;
 };
 
-const WeatherDOMTemp = () => {
-  const forecastDataWrapper = document.querySelector(
-    "[data-slctr=forecastDataWrapper]"
-  );
-
+const WeatherDom = (() => {
   const setTempLabels = (frcst) => {
     const mainTempLabel = document.querySelector("[data-slctr=mainTempLabel]");
     const maxTempLabel = document.querySelector("[data-slctr=maxTempLabel]");
@@ -67,7 +57,7 @@ const WeatherDOMTemp = () => {
       "[data-slctr=feelsTempLabel]"
     );
 
-    const tempSymbol = getTempSymbol(getLocalKey("crntMeasureUnit"));
+    const tempSymbol = Unit.getTempSymbol(Local.getValue("unit"));
 
     mainTempLabel.textContent = `${Math.floor(frcst.main.temp)}${tempSymbol}`;
 
@@ -84,7 +74,7 @@ const WeatherDOMTemp = () => {
     )}${tempSymbol}`;
   };
 
-  const setWeather = (frcst) => {
+  const setMainWeather = (frcst) => {
     const mainWeather = document.querySelector("[data-slctr=mainWeather]");
     const forecastHours = getHours(parseISO(frcst.dt_txt));
     const mainWeatherIconPath = getWeatherIconPath(
@@ -112,12 +102,12 @@ const WeatherDOMTemp = () => {
     const windDirLabel = document.querySelector("[data-slctr=windDirLabel]");
 
     const hasRainProp = Object.prototype.hasOwnProperty.call(frcst, "rain");
-    const speedSymbol = convSpeedSymbol(getLocalKey("crntMeasureUnit"));
+    const speedSymbol = Unit.getVelocitySymbol(Local.getValue("unit"));
 
     rainVolLabel.textContent = `${hasRainProp ? frcst.rain["3h"] : 0} mm`;
     humidityLabel.textContent = `${frcst.main.humidity}%`;
     windSpeedLabel.textContent = `${frcst.wind.speed} ${speedSymbol}`;
-    windDirLabel.textContent = `${parseDegDrctn(frcst.wind.deg)}`;
+    windDirLabel.textContent = `${getDegreeDrctn(frcst.wind.deg)}`;
   };
 
   const setSuntime = (city) => {
@@ -140,52 +130,56 @@ const WeatherDOMTemp = () => {
 
   const setTodaysWeather = (frcst, city) => {
     setTempLabels(frcst);
-    setWeather(frcst);
+    setMainWeather(frcst);
     setWeatherLocation(city);
     setWeatherDetails(frcst);
     setSuntime(city);
   };
 
+  const forecastDataWrapper = document.querySelector(
+    "[data-slctr=forecastDataWrapper]"
+  );
+
   const forecastToday = (data) => {
     forecastDataWrapper.innerHTML = "";
 
-    let frcstToday;
+    let forecastNow;
+    let isDone = false;
 
-    for (let i = 0; i < data.list.length; i += 1) {
-      const forecast = data.list[i];
-      const forecastTime = parseISO(forecast.dt_txt);
+    data.list.forEach((forecast) => {
+      if (isDone) return;
 
       const timeNow = toDate(Date.now());
-      if (
-        isToday(forecastTime) &&
-        differenceInHours(timeNow, forecastTime) < 3
-      ) {
-        frcstToday = forecast;
-        const forecastData = ForecastDataTemp("Today", forecast);
-        forecastDataWrapper.insertAdjacentHTML("beforeend", forecastData);
-        break;
-      }
-    }
+      const forecastTime = parseISO(forecast.dt_txt);
 
-    setTodaysWeather(frcstToday, data.city);
+      const hourDifference = differenceInHours(timeNow, forecastTime);
+
+      if (isToday(forecastTime) && hourDifference < 3) {
+        isDone = true;
+        forecastNow = forecast;
+        const forecastData = ForecastDataTemp("Today", forecastNow);
+        forecastDataWrapper.insertAdjacentHTML("beforeend", forecastData);
+      }
+    });
+
+    setTodaysWeather(forecastNow, data.city);
   };
 
   const forecastNextFourDays = (data) => {
     let weekDay;
 
-    for (let i = 0; i < data.list.length; i += 1) {
-      const forecast = data.list[i];
+    data.list.forEach((forecast) => {
       const timeNow = toDate(Date.now());
       const forecastTime = parseISO(forecast.dt_txt);
 
       const hourDifference = getHours(timeNow) - getHours(forecastTime);
-      weekDay = parseWeekDayName(getDay(forecastTime));
+      weekDay = getWeekDayName(getDay(forecastTime));
 
       if (!isToday(forecastTime) && hourDifference <= 3 && hourDifference > 0) {
         const forecastData = ForecastDataTemp(weekDay, forecast);
         forecastDataWrapper.insertAdjacentHTML("beforeend", forecastData);
       }
-    }
+    });
   };
 
   const setLastUpdate = () => {
@@ -202,68 +196,6 @@ const WeatherDOMTemp = () => {
     forecastNextFourDays,
     setLastUpdate,
   };
-};
-
-const Weather = (() => {
-  const DOM = WeatherDOMTemp();
-  const Geo = navigator.geolocation ? navigator.geolocation : false;
-
-  const getWeather = async (latitude, longitude, errorFunc, unit) => {
-    storeToLocal("crntLat", latitude);
-    storeToLocal("crntLong", longitude);
-    storeToLocal("crntMeasureUnit", unit);
-
-    let targetData;
-    let data;
-    try {
-      targetData = await fetch(``);
-
-      data = await targetData.json();
-    } catch (err) {
-      errorFunc(err);
-      return;
-    }
-
-    Radar.flyTo([latitude, longitude], 8);
-    DOM.forecastToday(data);
-    DOM.forecastNextFourDays(data);
-    DOM.setLastUpdate();
-  };
-
-  const getLatAndLong = async (pos) => {
-    deleteLocalKey("geoLocErr");
-
-    const latPos = pos.coords.latitude;
-    const longPos = pos.coords.longitude;
-
-    getWeather(
-      latPos,
-      longPos,
-      displayErrorAlert,
-      getLocalKey("crntMeasureUnit")
-    );
-  };
-
-  const getLocation = async (input, errorFunc) => {
-    let locations;
-    try {
-      locations = await fetch(``, { mode: "cors" });
-      return locations.json();
-    } catch (err) {
-      errorFunc(err);
-    }
-  };
-
-  const getPosition = (errorFunc) => {
-    Geo.getCurrentPosition(getLatAndLong, errorFunc, { timeout: 10000 });
-  };
-
-  return {
-    getPosition,
-    getWeather,
-    getLocation,
-    Geo,
-  };
 })();
 
-export default Weather;
+export default WeatherDom;

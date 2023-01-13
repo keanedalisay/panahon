@@ -1,65 +1,54 @@
 import fullscreenIcon from "../../assets/svgs/fullscreen-icon.svg";
 
-import { getLocalKey } from "../helpers/data-helpers";
-import { toggleOverlay } from "../helpers/dom-helpers";
+import { Local } from "../helpers/data-helpers";
+import { Overlay } from "../helpers/dom-helpers";
 
-const crntLat = parseInt(getLocalKey("crntLat"), 10) || 0;
-const crntLong = parseInt(getLocalKey("crntLong"), 10) || 0;
-
-const openWeatherMap = (() => {
-  const temp = L.tileLayer(
-    `https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=`
-  );
-  const precip = L.tileLayer(
-    `https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=`
-  );
-  const clouds = L.tileLayer(
-    `https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=`
-  );
-  const wind = L.tileLayer(
-    `https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=`
-  );
-
-  return { temp, precip, clouds, wind };
-})();
-
-const openStreetMap = L.tileLayer(
-  `https://tile.openstreetmap.org/{z}/{x}/{y}.png`,
-  {
-    attribution: `&copy; <a class="openWeatherLink" href="https://www.openstreetmap.org/about" target="_blank">OpenStreetMap</a> | &copy; 
-     <a class="openWeatherLink" href="https://openweathermap.org/" target="_blank">OpenWeather</a>`,
-  }
+const tempLayer = L.tileLayer(
+  `https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=`
+);
+const precipLayer = L.tileLayer(
+  `https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=`
+);
+const cloudsLayer = L.tileLayer(
+  `https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=`
+);
+const windLayer = L.tileLayer(
+  `https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=`
 );
 
-const weatherRadarPanel = document.querySelector(
-  "[data-slctr=weatherRadarPanel]"
-);
-const radarElem = document.querySelector("[data-slctr=weatherRadar]");
+const baseLayers = {
+  Temperature: tempLayer,
+  Precipitation: precipLayer,
+  Clouds: cloudsLayer,
+  Wind: windLayer,
+};
 
-const Radar = L.map(radarElem, {
-  center: [crntLat, crntLong],
+const osmLayer = L.tileLayer(`https://tile.openstreetmap.org/{z}/{x}/{y}.png`, {
+  attribution: `&copy; <a class="openWeatherLink" href="https://www.openstreetmap.org/about" target="_blank">OpenStreetMap</a> | &copy; 
+       <a class="openWeatherLink" href="https://openweathermap.org/" target="_blank">OpenWeather</a>`,
+});
+
+const weatherRadarElem = document.querySelector("[data-slctr=weatherRadar]");
+const latitude = Local.getValue("latitude") || 0;
+const longitude = Local.getValue("longitude") || 0;
+
+const WeatherRadar = L.map(weatherRadarElem, {
+  center: [parseInt(latitude, 10), parseInt(longitude, 10)],
   minZoom: 2,
   maxZoom: 10,
   zoom: 8,
-  layers: [openStreetMap, openWeatherMap.precip],
+  layers: [osmLayer, precipLayer],
 });
 
 setTimeout(() => {
-  Radar.invalidateSize();
+  WeatherRadar.invalidateSize();
 }, 0);
 
-const baseMaps = {
-  Temperature: openWeatherMap.temp,
-  Precipitation: openWeatherMap.precip,
-  Clouds: openWeatherMap.clouds,
-  Wind: openWeatherMap.wind,
-};
-
 L.control
-  .layers(baseMaps, null, {
+  .layers(baseLayers, null, {
     collapsed: false,
   })
-  .addTo(Radar);
+  .addTo(WeatherRadar);
 
 const FullscreenControl = L.Control.extend({
   options: { position: "topleft" },
@@ -84,15 +73,21 @@ const FullscreenControl = L.Control.extend({
     fullscreenBtn.appendChild(object);
 
     fullscreenBtn.addEventListener("click", () => {
+      setTimeout(() => {
+        WeatherRadar.invalidateSize();
+      }, 0);
+
+      const weatherRadarPanel = document.querySelector(
+        "[data-slctr=weatherRadarPanel]"
+      );
       weatherRadarPanel.classList.toggle("weatherRadarPanel-fullscreen");
-      toggleOverlay();
-      Radar.invalidateSize();
+      Overlay.toggle();
     });
 
     return fullscreenBtn;
   },
 });
 
-Radar.addControl(new FullscreenControl());
+WeatherRadar.addControl(new FullscreenControl());
 
-export default Radar;
+export default WeatherRadar;
