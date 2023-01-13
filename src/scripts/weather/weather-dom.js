@@ -1,13 +1,15 @@
-import getHours from "date-fns/getHours";
-import getDay from "date-fns/getDay";
+import {
+  getHours,
+  getDay,
+  isToday,
+  differenceInHours,
+  secondsToMilliseconds,
+  toDate,
+  format,
+  parseISO,
+} from "date-fns";
 
-import isToday from "date-fns/isToday";
-import differenceInHours from "date-fns/differenceInHours";
-import secondsToMilliseconds from "date-fns/secondsToMilliseconds";
-import toDate from "date-fns/toDate";
-
-import format from "date-fns/format";
-import parseISO from "date-fns/parseISO";
+import { getTimezoneNameByOffset } from "tzname";
 
 import getWeatherIconPath from "./weather-icon";
 
@@ -18,6 +20,7 @@ import {
   getDegreeDrctn,
   objHasProp,
 } from "../helpers/data-helpers";
+import { formatInTimeZone } from "date-fns-tz";
 
 const ForecastDataTemp = (weekDay, frcst) => {
   const frcstTempMax = Math.round(frcst.main.temp_max);
@@ -123,11 +126,22 @@ const WeatherDom = (() => {
       "[data-slctr=sunsetTimeLabel]"
     );
 
+    const tzMsOffset = secondsToMilliseconds(city.timezone);
+    const tzName = getTimezoneNameByOffset(tzMsOffset);
+
     const sunriseDate = toDate(secondsToMilliseconds(city.sunrise));
     const sunsetDate = toDate(secondsToMilliseconds(city.sunset));
 
-    const sunriseTime = `${format(sunriseDate, "p").toLowerCase()}`;
-    const sunsetTime = `${format(sunsetDate, "p").toLowerCase()}`;
+    const sunriseTime = `${formatInTimeZone(
+      sunriseDate,
+      tzName,
+      "p"
+    ).toLowerCase()}`;
+    const sunsetTime = `${formatInTimeZone(
+      sunsetDate,
+      tzName,
+      "p"
+    ).toLowerCase()}`;
 
     sunriseTimeLabel.textContent = sunriseTime;
     sunsetTimeLabel.textContent = sunsetTime;
