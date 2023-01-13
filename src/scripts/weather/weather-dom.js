@@ -16,6 +16,7 @@ import {
   Local,
   getWeekDayName,
   getDegreeDrctn,
+  objHasProp,
 } from "../helpers/data-helpers";
 
 const ForecastDataTemp = (weekDay, frcst) => {
@@ -101,12 +102,16 @@ const WeatherDom = (() => {
     );
     const windDirLabel = document.querySelector("[data-slctr=windDirLabel]");
 
-    const hasRainProp = Object.prototype.hasOwnProperty.call(frcst, "rain");
+    const windSpeed = Unit.isMetric()
+      ? (frcst.wind.speed * 3600) / 1000
+      : frcst.wind.speed;
     const speedSymbol = Unit.getVelocitySymbol(Local.getValue("unit"));
 
-    rainVolLabel.textContent = `${hasRainProp ? frcst.rain["3h"] : 0} mm`;
+    rainVolLabel.textContent = `${
+      objHasProp(frcst, "rain") ? frcst.rain["3h"] : 0
+    } mm`;
     humidityLabel.textContent = `${frcst.main.humidity}%`;
-    windSpeedLabel.textContent = `${frcst.wind.speed} ${speedSymbol}`;
+    windSpeedLabel.textContent = `${Math.round(windSpeed)} ${speedSymbol}`;
     windDirLabel.textContent = `${getDegreeDrctn(frcst.wind.deg)}`;
   };
 

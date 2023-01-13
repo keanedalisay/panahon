@@ -70,7 +70,7 @@ export const Unit = (() => {
   };
 
   const getVelocitySymbol = (unit) => {
-    if (/metric/i.test(unit)) return "m/s";
+    if (/metric/i.test(unit)) return "kph";
     return "mph";
   };
 
