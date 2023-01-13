@@ -62,6 +62,11 @@ const Settings = (() => {
     settingsBtn.addEventListener("click", toggleDropdown);
     convertToCelsiusBtn.addEventListener("click", convertToCelsius);
     convertToFahrenheitBtn.addEventListener("click", convertToFahrenheit);
+
+    if (!Unit.isMetric()) {
+      celsiusSignal.classList.remove("signal-isActivated");
+      fahrenheitSignal.classList.add("signal-isActivated");
+    }
   };
 
   return { init };
