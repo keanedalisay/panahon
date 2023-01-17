@@ -1,3 +1,4 @@
+import { getHours, toDate } from "date-fns";
 import { convToHex, clampRgbVal } from "./helpers/data-helpers";
 
 const FadeElemBkgrdTemp = (elem) => {
@@ -27,6 +28,18 @@ const FadeElemBkgrdTemp = (elem) => {
   return { init };
 };
 
+const timeBasedBkgrd = () => {
+  const { body } = document;
+  const timeInHours = getHours(toDate(Date.now()));
+  if (timeInHours >= 7 && timeInHours <= 12) {
+    body.classList.add("bkgrd-morning");
+  } else if (timeInHours >= 13 && timeInHours <= 18) {
+    body.classList.add("bkgrd-afternoon");
+  } else if ((timeInHours >= 19 && timeInHours <= 24) || timeInHours <= 3) {
+    body.classList.add("bkgrd-night");
+  } else body.classList.add("bkgrd-twilight");
+};
+
 const Anim = (() => {
   const forecastPanel = document.querySelector("[data-slctr=forecastPanel]");
   const extraWeatherPanel = document.querySelector(
@@ -49,6 +62,8 @@ const Anim = (() => {
       requestAnimationFrame(fadeSuntimeBkgrd.init);
       requestAnimationFrame(fadeWeatherRadarBkgrd.init);
     });
+
+    timeBasedBkgrd();
   };
 
   return { init };

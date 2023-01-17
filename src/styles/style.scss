@@ -42,8 +42,22 @@ body {
   padding: 0 1rem;
   width: 100%;
   min-height: 100vh;
+  background: var(--white);
+}
+
+.bkgrd-morning {
   background: linear-gradient(45deg, var(--eastern-blue), #afe2ff);
 }
+.bkgrd-afternoon {
+  background: linear-gradient(45deg, var(--nugget), #b3ddff 90%);
+}
+.bkgrd-night {
+  background: linear-gradient(45deg, var(--mulled-wine), #333241 100%);
+}
+.bkgrd-twilight {
+  background: linear-gradient(45deg, var(--mulled-wine), #4a5770 40%);
+}
+
 body::-webkit-scrollbar {
   width: 0.75rem;
   background: var(--white);
