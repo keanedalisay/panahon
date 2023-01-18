@@ -33,9 +33,9 @@ const timeBasedBkgrd = () => {
   const timeInHours = getHours(toDate(Date.now()));
   if (timeInHours >= 7 && timeInHours <= 12) {
     body.classList.add("bkgrd-morning");
-  } else if (timeInHours >= 13 && timeInHours <= 18) {
+  } else if (timeInHours >= 13 && timeInHours <= 17) {
     body.classList.add("bkgrd-afternoon");
-  } else if ((timeInHours >= 19 && timeInHours <= 24) || timeInHours <= 3) {
+  } else if ((timeInHours >= 18 && timeInHours <= 24) || timeInHours <= 3) {
     body.classList.add("bkgrd-night");
   } else body.classList.add("bkgrd-twilight");
 };
