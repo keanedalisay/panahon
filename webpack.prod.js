@@ -10,14 +10,14 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "[contenthash][ext]",
+    filename: "[name].[contenthash].js",
   },
   plugins: [
     new HTMLWebpackPlugin({
-      filename: "[name].[contenthash][ext]",
+      filename: "[name].[contenthash].html",
       template: "src/index.temp.html",
     }),
-    new MiniCssExtractPlugin({ filename: "[name].[contenthash][ext]" }),
+    new MiniCssExtractPlugin({ filename: "[name].[contenthash].css" }),
     new CleanWebpackPlugin(),
   ],
   module: {
