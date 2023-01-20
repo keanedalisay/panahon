@@ -28,7 +28,14 @@ const Settings = (() => {
   const celsiusSignal = convertToCelsiusBtn.querySelector(".signal");
   const fahrenheitSignal = convertToFahrenheitBtn.querySelector(".signal");
 
-  const toggleDropdown = () => settingsDrpdwn.classList.toggle("elem-hide");
+  const toggleDropdown = () => {
+    settingsDrpdwn.classList.toggle("elem-hide");
+    const ariaHidden = settingsDrpdwn.getAttribute("aria-hidden");
+    settingsDrpdwn.setAttribute(
+      "aria-hidden",
+      ariaHidden === "true" ? "false" : "true"
+    );
+  };
 
   const convertToCelsius = () => {
     if (Unit.isMetric()) return;
@@ -84,11 +91,13 @@ const LocationAutocmplt = (() => {
     weatherLocAutocmplt.innerHTML = "";
     weatherLocInput.classList.add("widgetPanel-weatherLocInput-autocmpltOn");
     weatherLocAutocmplt.classList.remove("elem-hide");
+    weatherLocAutocmplt.setAttribute("aria-hidden", "false");
   };
   const hide = () => {
     weatherLocAutocmplt.innerHTML = "";
     weatherLocInput.classList.remove("widgetPanel-weatherLocInput-autocmpltOn");
     weatherLocAutocmplt.classList.add("elem-hide");
+    weatherLocAutocmplt.setAttribute("aria-hidden", "true");
   };
 
   const autocmpltVal = (name, coords) => {

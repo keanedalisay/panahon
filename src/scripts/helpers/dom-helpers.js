@@ -20,10 +20,25 @@ export const delegateEvent = (parent, event, slctr, func) => {
 export const Overlay = (() => {
   const overlay = document.querySelector("[data-slctr=overlay]");
 
-  const show = ShowElemTemp(overlay);
-  const hide = HideElemTemp(overlay);
+  const show = () => {
+    const showElem = ShowElemTemp(overlay);
+    overlay.setAttribute("aria-hidden", "false");
+    showElem();
+  };
+  const hide = () => {
+    const hideElem = HideElemTemp(overlay);
+    overlay.setAttribute("aria-hidden", "true");
+    hideElem();
+  };
 
-  const toggle = () => overlay.classList.toggle("elem-hide");
+  const toggle = () => {
+    overlay.classList.toggle("elem-hide");
+    const ariaHidden = overlay.getAttribute("aria-hidden");
+    overlay.setAttribute(
+      "aria-hidden",
+      ariaHidden === "true" ? "false" : "true"
+    );
+  };
 
   const hideTargetElem = () => {
     const targetElems = [
@@ -35,6 +50,7 @@ export const Overlay = (() => {
       const targetElem = document.querySelector(slctr);
       if (!targetElem.classList.contains("elem-hide")) {
         targetElem.classList.add("elem-hide");
+        targetElem.setAttribute("aria-hidden", "true");
       }
     });
 
@@ -58,6 +74,7 @@ export const AlertPanel = (() => {
   const hide = HideElemTemp(alertPanel);
 
   const showError = (err) => {
+    alertPanel.setAttribute("aria-hidden", "false");
     alertHeading.textContent = err.name;
     alertDetail.textContent = err.stack;
     show();
@@ -65,6 +82,7 @@ export const AlertPanel = (() => {
   };
 
   const showCustomError = (err) => {
+    alertPanel.setAttribute("aria-hidden", "false");
     alertHeading.textContent = err.name;
     alertDetail.textContent = err.message;
     show();
@@ -73,6 +91,7 @@ export const AlertPanel = (() => {
 
   closeAlertBtn.addEventListener("click", () => {
     hide();
+    alertPanel.setAttribute("aria-hidden", "true");
     Overlay.hide();
   });
 
@@ -86,12 +105,14 @@ export const LoadingPanel = (() => {
     const showElem = ShowElemTemp(loadingPanel);
     setTimeout(() => loadingPanel.classList.remove("loadingPanel-hide"), 1);
     showElem();
+    loadingPanel.setAttribute("aria-hidden", "false");
   };
 
   const hide = () => {
     const hideElem = HideElemTemp(loadingPanel);
     setTimeout(hideElem, 276);
     loadingPanel.classList.add("loadingPanel-hide");
+    loadingPanel.setAttribute("aria-hidden", "true");
   };
 
   return { show, hide };
