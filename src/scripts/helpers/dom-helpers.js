@@ -78,3 +78,21 @@ export const AlertPanel = (() => {
 
   return { showError, showCustomError };
 })();
+
+export const LoadingPanel = (() => {
+  const loadingPanel = document.querySelector("[data-slctr=loadingPanel]");
+
+  const show = () => {
+    const showElem = ShowElemTemp(loadingPanel);
+    setTimeout(() => loadingPanel.classList.remove("loadingPanel-hide"), 1);
+    showElem();
+  };
+
+  const hide = () => {
+    const hideElem = HideElemTemp(loadingPanel);
+    setTimeout(hideElem, 276);
+    loadingPanel.classList.add("loadingPanel-hide");
+  };
+
+  return { show, hide };
+})();

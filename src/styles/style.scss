@@ -124,6 +124,45 @@ object {
   font-size: clamp(1.4rem, 3vw, 2rem);
 }
 
+.loadingPanel {
+  background: var(--white);
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  @include flexCenter;
+  z-index: 1;
+  transition: opacity 275ms ease-in-out;
+}
+.loadingFigure {
+  @include flexCenterColumn;
+}
+.loadingFigure-icon {
+  @include widthAndHeight(clamp(10rem, 25vw, 15rem), clamp(10rem, 25vw, 15rem));
+  animation: rotate-loading 5s linear infinite;
+}
+@keyframes rotate-loading {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.loadingFigure-caption {
+  margin-top: 5rem;
+  text-align: center;
+  font-family: "Rubik", Arial, Helvetica, sans-serif;
+  font-weight: 500;
+  font-size: clamp(2rem, 5vw, 3rem);
+  color: var(--mine-shaft);
+}
+
+.loadingPanel-hide {
+  opacity: 0;
+}
+
 .wrapper {
   margin: 0 auto;
   width: min(100%, 80rem);

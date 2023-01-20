@@ -2,13 +2,14 @@ import {
   getHours,
   getDay,
   isToday,
-  differenceInHours,
   secondsToMilliseconds,
   toDate,
   format,
   parseISO,
   isBefore,
 } from "date-fns";
+
+import { formatInTimeZone } from "date-fns-tz";
 
 import { getTimezoneNameByOffset } from "tzname";
 
@@ -21,8 +22,6 @@ import {
   getDegreeDrctn,
   objHasProp,
 } from "../helpers/data-helpers";
-import { formatInTimeZone } from "date-fns-tz";
-import { toDateWithOptions } from "date-fns-tz/fp";
 
 const ForecastDataTemp = (weekDay, frcst) => {
   const frcstTempMax = Math.round(frcst.main.temp_max);

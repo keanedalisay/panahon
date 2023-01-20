@@ -12,7 +12,7 @@ import {
   objHasProp,
   Unit,
 } from "./helpers/data-helpers";
-import { delegateEvent, AlertPanel } from "./helpers/dom-helpers";
+import { delegateEvent, AlertPanel, LoadingPanel } from "./helpers/dom-helpers";
 
 const Settings = (() => {
   const settingsBtn = document.querySelector("[data-slctr=settingsBtn]");
@@ -193,6 +193,7 @@ const App = (() => {
     }
 
     AlertPanel.showCustomError(err);
+    LoadingPanel.hide();
   };
 
   const checkGeolocationAPI = () => {
@@ -202,6 +203,7 @@ const App = (() => {
         message: "Use the search bar instead to retrieve weather data.",
       };
       AlertPanel.showCustomError(err);
+      LoadingPanel.hide();
       return;
     }
     Weather.getPosition(showPositionError);
@@ -213,9 +215,10 @@ const App = (() => {
     checkGeolocationAPI();
     Anim.init();
 
-    window.addEventListener("unhandledrejection", (e) =>
-      AlertPanel.showError(e.reason)
-    );
+    window.addEventListener("unhandledrejection", (e) => {
+      AlertPanel.showError(e.reason);
+      LoadingPanel.hide();
+    });
   };
 
   return { init };
