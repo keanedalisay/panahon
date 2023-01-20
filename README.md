@@ -4,7 +4,9 @@ A weather-based web application.
 
 Grateful for the people who built these tools which made this project possible:
 
-<a href="https://www.openstreetmap.org/about"><img src="src/assets/imgs/open-street-map.png" alt="OpenStreetMap" width="50"></a> <a href="https://www.openstreetmap.org/about"><img src="src/assets/imgs/leaflet.png" alt="OpenStreetMap" width="100"></a> <a href="https://www.openstreetmap.org/about"><img src="src/assets/imgs/open-weather.png" alt="OpenStreetMap" width="100"></a>
+<a href="https://www.openstreetmap.org/about"><img src="src/assets/imgs/open-street-map.png" alt="OpenStreetMap" width="50"></a>
+<a href="https://leafletjs.com/"><img src="src/assets/imgs/leaflet.png" alt="Leaflet" width="100"></a>
+<a href="https://openweathermap.org/"><img src="src/assets/imgs/open-weather.png" alt="OpenWeather" width="100"></a>
 
 ---
 
