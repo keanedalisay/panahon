@@ -8,6 +8,7 @@
     <meta name="description" content="Panahon (translates to Weather) is a weather-based web application.">
     <meta name="author-name" content="Keane Dalisay">
     <title>Panahon</title>
+    <link rel="icon" href="assets/svgs/clear-sky-day-icon.svg">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
         integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
@@ -23,7 +24,7 @@
         <h1 class="alertPanel-hdng" data-slctr="alertHeading">An alert message should be here...</h1>
         <p class="alertPanel-detail" data-slctr="alertDetail">Why are you seeing this?</p>
     </div>
-    <div class="wrapper">
+    <main class="wrapper">
         <section class="widgetPanel">
             <input class="widgetPanel-weatherLocInput" data-slctr="weatherLocInput" type="search"
                 placeholder="Search for location to get weather data...">
@@ -147,7 +148,7 @@
                     class="openWeatherLink-img" alt="Open Weather API Logo" src="assets/imgs/open-weather.png"></a>
             <span class="weatherLastUpdated" data-slctr="lastUpdatedLabel">Last updated 0:00</span>
         </footer>
-    </div>
+    </main>
 </body>
 
 </html>
