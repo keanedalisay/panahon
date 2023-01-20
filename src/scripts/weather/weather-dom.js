@@ -7,6 +7,7 @@ import {
   toDate,
   format,
   parseISO,
+  isBefore,
 } from "date-fns";
 
 import { getTimezoneNameByOffset } from "tzname";
@@ -21,6 +22,7 @@ import {
   objHasProp,
 } from "../helpers/data-helpers";
 import { formatInTimeZone } from "date-fns-tz";
+import { toDateWithOptions } from "date-fns-tz/fp";
 
 const ForecastDataTemp = (weekDay, frcst) => {
   const frcstTempMax = Math.round(frcst.main.temp_max);
@@ -29,7 +31,7 @@ const ForecastDataTemp = (weekDay, frcst) => {
 
   const frcstWeatherDesc = frcst.weather[0].description;
 
-  const frcstHours = getHours(parseISO(frcst.dt_txt));
+  const frcstHours = getHours(frcst.dt);
   const frcstWeatherIconPath = getWeatherIconPath(frcstWeatherDesc, frcstHours);
 
   const tempSymbol = Unit.getTempSymbol(Local.getValue("unit"));
@@ -80,7 +82,7 @@ const WeatherDom = (() => {
 
   const setMainWeather = (frcst) => {
     const mainWeather = document.querySelector("[data-slctr=mainWeather]");
-    const forecastHours = getHours(parseISO(frcst.dt_txt));
+    const forecastHours = getHours(frcst.dt);
     const mainWeatherIconPath = getWeatherIconPath(
       frcst.weather[0].description,
       forecastHours
@@ -162,25 +164,41 @@ const WeatherDom = (() => {
   const forecastToday = (data) => {
     forecastDataWrapper.innerHTML = "";
 
+    const tzMsOffset = secondsToMilliseconds(data.city.timezone);
+    const tzName = getTimezoneNameByOffset(tzMsOffset);
+    const tzMsDate = parseInt(
+      formatInTimeZone(data.list[0].dt_txt, tzName, "T"),
+      10
+    );
+
     let forecastNow;
+    let tzIsDone = false;
     let isDone = false;
 
     data.list.forEach((forecast) => {
       if (isDone) return;
 
-      const timeNow = toDate(Date.now());
-      const forecastTime = parseISO(forecast.dt_txt);
+      const tzHour = getHours(tzMsDate);
+      const forecastDate = parseISO(forecast.dt_txt);
+      const forecastHour = getHours(forecastDate);
 
-      const hourDifference = differenceInHours(timeNow, forecastTime);
+      const hourDifference = forecastHour - tzHour;
 
-      if (isToday(forecastTime) && hourDifference < 3) {
+      if (isBefore(tzMsDate, forecastDate) && !tzIsDone) {
+        tzIsDone = true;
+        forecastNow = forecast;
+        forecastNow.dt = tzMsDate;
+        const weekDay = getWeekDayName(getDay(tzMsDate));
+        const forecastData = ForecastDataTemp(weekDay, forecastNow);
+        forecastDataWrapper.insertAdjacentHTML("beforeend", forecastData);
+      } else if (isToday(forecastDate) && hourDifference < 3) {
         isDone = true;
         forecastNow = forecast;
-        const forecastData = ForecastDataTemp("Today", forecastNow);
+        const weekDay = getWeekDayName(getDay(forecastDate));
+        const forecastData = ForecastDataTemp(weekDay, forecastNow);
         forecastDataWrapper.insertAdjacentHTML("beforeend", forecastData);
       }
     });
-
     setTodaysWeather(forecastNow, data.city);
   };
 
@@ -188,13 +206,11 @@ const WeatherDom = (() => {
     let weekDay;
 
     data.list.forEach((forecast) => {
-      const timeNow = toDate(Date.now());
-      const forecastTime = parseISO(forecast.dt_txt);
+      const forecastDate = parseISO(forecast.dt_txt);
+      const forecastHours = getHours(forecastDate);
+      weekDay = getWeekDayName(getDay(forecastDate));
 
-      const hourDifference = getHours(timeNow) - getHours(forecastTime);
-      weekDay = getWeekDayName(getDay(forecastTime));
-
-      if (!isToday(forecastTime) && hourDifference <= 3 && hourDifference > 0) {
+      if (!isToday(forecastDate) && forecastHours === 9) {
         const forecastData = ForecastDataTemp(weekDay, forecast);
         forecastDataWrapper.insertAdjacentHTML("beforeend", forecastData);
       }
