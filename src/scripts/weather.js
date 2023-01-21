@@ -25,10 +25,9 @@ const Weather = (() => {
   const fetchGeoData = (location) => {
     const apiKey = "658709bdb085569ffd29a2fc21347aaa";
 
-    return fetch(
-      `http://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=5&appid=${apiKey}`,
-      { mode: "cors" }
-    )
+    return fetch(`/geoapi/direct?q=${location}&limit=5&appid=${apiKey}`, {
+      mode: "cors",
+    })
       .then((data) => data.json())
       .catch((err) => {
         AlertPanel.showError(err);
