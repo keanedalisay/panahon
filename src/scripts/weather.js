@@ -1,6 +1,6 @@
 /* eslint-disable linebreak-style */
 
-import { getOpenWeatherKey, Local } from "./helpers/data-helpers";
+import { Local } from "./helpers/data-helpers";
 import { AlertPanel, LoadingPanel } from "./helpers/dom-helpers";
 
 import WeatherDom from "./weather/weather-dom";
@@ -9,8 +9,8 @@ import WeatherRadar from "./weather/weather-radar";
 const Weather = (() => {
   const Geo = navigator.geolocation ? navigator.geolocation : false;
 
-  const fetchWeatherData = async (latitude, longitude, unit) => {
-    const apiKey = await getOpenWeatherKey();
+  const fetchWeatherData = (latitude, longitude, unit) => {
+    const apiKey = process.env.OPEN_WEATHER_KEY;
 
     LoadingPanel.show();
     return fetch(
@@ -22,8 +22,8 @@ const Weather = (() => {
       });
   };
 
-  const fetchGeoData = async (location) => {
-    const apiKey = await getOpenWeatherKey();
+  const fetchGeoData = (location) => {
+    const apiKey = process.env.OPEN_WEATHER_KEY;
 
     return fetch(
       `http://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=5&appid=${apiKey}`,

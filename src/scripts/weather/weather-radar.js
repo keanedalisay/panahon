@@ -1,10 +1,10 @@
 import fullscreenIcon from "../../assets/svgs/fullscreen-icon.svg";
 
-import { getOpenWeatherKey, Local } from "../helpers/data-helpers";
+import { Local } from "../helpers/data-helpers";
 import { Overlay } from "../helpers/dom-helpers";
 
-const Layers = (async () => {
-  const apiKey = await getOpenWeatherKey();
+const Layers = (() => {
+  const apiKey = process.env.OPEN_WEATHER_KEY;
 
   const temp = L.tileLayer(
     `https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${apiKey}`
