@@ -30,7 +30,6 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "html-loader": "^4.2.0",
-    "netlify-cli": "^12.9.1",
     "sass": "^1.57.1",
     "sass-loader": "^13.2.0",
     "style-loader": "^3.3.1",
