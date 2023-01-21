@@ -1,6 +1,5 @@
 /* eslint-disable linebreak-style */
 
-import _redirects from "../../_redirects.txt";
 import commonStyle from "../styles/common.scss";
 import mainStyle from "../styles/style.scss";
 
