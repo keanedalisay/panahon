@@ -40,6 +40,11 @@ module.exports = {
         type: "asset/resource",
         generator: { filename: "assets/images/[name].[contenthash][ext]" },
       },
+      {
+        test: /\.txt$/i,
+        type: "asset/resource",
+        generator: { filename: "assets/[name][ext]" },
+      },
     ],
   },
 };
