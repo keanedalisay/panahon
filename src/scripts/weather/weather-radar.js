@@ -43,7 +43,7 @@ const WeatherRadar = L.map(weatherRadarElem, {
   minZoom: 2,
   maxZoom: 10,
   zoom: 8,
-  layers: [osmLayer, precipLayer],
+  layers: [osmLayer, Layers.precip],
 });
 
 setTimeout(() => {
