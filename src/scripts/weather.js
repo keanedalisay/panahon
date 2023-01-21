@@ -10,7 +10,7 @@ const Weather = (() => {
   const Geo = navigator.geolocation ? navigator.geolocation : false;
 
   const fetchWeatherData = (latitude, longitude, unit) => {
-    const apiKey = process.env.OPEN_WEATHER_KEY;
+    const apiKey = "658709bdb085569ffd29a2fc21347aaa";
 
     LoadingPanel.show();
     return fetch(
@@ -23,7 +23,7 @@ const Weather = (() => {
   };
 
   const fetchGeoData = (location) => {
-    const apiKey = process.env.OPEN_WEATHER_KEY;
+    const apiKey = "658709bdb085569ffd29a2fc21347aaa";
 
     return fetch(
       `http://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=5&appid=${apiKey}`,

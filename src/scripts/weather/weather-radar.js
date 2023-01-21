@@ -4,7 +4,7 @@ import { Local } from "../helpers/data-helpers";
 import { Overlay } from "../helpers/dom-helpers";
 
 const Layers = (() => {
-  const apiKey = process.env.OPEN_WEATHER_KEY;
+  const apiKey = "658709bdb085569ffd29a2fc21347aaa";
 
   const temp = L.tileLayer(
     `https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${apiKey}`
