@@ -1,26 +1,32 @@
 import fullscreenIcon from "../../assets/svgs/fullscreen-icon.svg";
 
-import { Local } from "../helpers/data-helpers";
+import { getOpenWeatherKey, Local } from "../helpers/data-helpers";
 import { Overlay } from "../helpers/dom-helpers";
 
-const tempLayer = L.tileLayer(
-  `https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=`
-);
-const precipLayer = L.tileLayer(
-  `https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=`
-);
-const cloudsLayer = L.tileLayer(
-  `https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=`
-);
-const windLayer = L.tileLayer(
-  `https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=`
-);
+const Layers = (async () => {
+  const apiKey = await getOpenWeatherKey();
+
+  const temp = L.tileLayer(
+    `https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${apiKey}`
+  );
+  const precip = L.tileLayer(
+    `https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${apiKey}`
+  );
+  const clouds = L.tileLayer(
+    `https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${apiKey}`
+  );
+  const wind = L.tileLayer(
+    `https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${apiKey}`
+  );
+
+  return { temp, precip, clouds, wind };
+})();
 
 const baseLayers = {
-  Temperature: tempLayer,
-  Precipitation: precipLayer,
-  Clouds: cloudsLayer,
-  Wind: windLayer,
+  Temperature: Layers.temp,
+  Precipitation: Layers.precip,
+  Clouds: Layers.clouds,
+  Wind: Layers.wind,
 };
 
 const osmLayer = L.tileLayer(`https://tile.openstreetmap.org/{z}/{x}/{y}.png`, {

@@ -1,6 +1,6 @@
 /* eslint-disable linebreak-style */
 
-import { Local } from "./helpers/data-helpers";
+import { getOpenWeatherKey, Local } from "./helpers/data-helpers";
 import { AlertPanel, LoadingPanel } from "./helpers/dom-helpers";
 
 import WeatherDom from "./weather/weather-dom";
@@ -9,10 +9,12 @@ import WeatherRadar from "./weather/weather-radar";
 const Weather = (() => {
   const Geo = navigator.geolocation ? navigator.geolocation : false;
 
-  const fetchWeatherData = (latitude, longitude, unit) => {
+  const fetchWeatherData = async (latitude, longitude, unit) => {
+    const apiKey = await getOpenWeatherKey();
+
     LoadingPanel.show();
     return fetch(
-      `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=${unit}&appid=`
+      `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=${unit}&appid=${apiKey}`
     )
       .then((data) => data.json())
       .catch((err) => {
@@ -20,15 +22,18 @@ const Weather = (() => {
       });
   };
 
-  const fetchGeoData = (location) =>
-    fetch(
-      `http://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=5&appid=`,
+  const fetchGeoData = async (location) => {
+    const apiKey = await getOpenWeatherKey();
+
+    return fetch(
+      `http://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=5&appid=${apiKey}`,
       { mode: "cors" }
     )
       .then((data) => data.json())
       .catch((err) => {
         AlertPanel.showError(err);
       });
+  };
 
   const getWeather = async (latitude, longitude) => {
     if (Local.hasKey("latitude") && Local.hasKey("longitude")) {

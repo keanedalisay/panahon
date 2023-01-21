@@ -23,6 +23,9 @@ export const clampRgbVal = (val, maxVal) => {
   return val;
 };
 
+export const getOpenWeatherKey = async () =>
+  fetch("/apikey/openweather").then((data) => data.json());
+
 export const Local = (() => {
   const read = () => JSON.parse(localStorage.getItem("data")) || [];
 
