@@ -1,6 +1,8 @@
 # Panahon
 
-A weather-based web application.
+A [weather](http://panahon.surge.sh/)-based web application.
+
+I used [Surge](https://surge.sh/) to deploy this project as one of the APIs I used is an **http** request, not _https_.
 
 Grateful for the people who built these tools which made this project possible:
 
