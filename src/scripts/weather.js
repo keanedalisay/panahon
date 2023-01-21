@@ -11,7 +11,9 @@ const Weather = (() => {
 
   const fetchWeatherData = (latitude, longitude, unit) => {
     LoadingPanel.show();
-    return fetch(``)
+    return fetch(
+      `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=${unit}&appid=`
+    )
       .then((data) => data.json())
       .catch((err) => {
         AlertPanel.showError(err);
@@ -19,7 +21,10 @@ const Weather = (() => {
   };
 
   const fetchGeoData = (location) =>
-    fetch(``, { mode: "cors" })
+    fetch(
+      `http://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=5&appid=`,
+      { mode: "cors" }
+    )
       .then((data) => data.json())
       .catch((err) => {
         AlertPanel.showError(err);
