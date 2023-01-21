@@ -1,6 +1,0 @@
-[build]
-  functions = "functions"
-[[redirect]]
-  from = "/apikey/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
